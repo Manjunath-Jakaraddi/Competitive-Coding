@@ -1,0 +1,165 @@
+/*
+By : Manjunath P Jakaraddi
+Date : 24/2/2018
+Problem : Hackerrank University Codesprint
+*/
+
+#include<bits/stdc++.h>
+#define MAX 26
+using namespace std;
+map<string,long long> mmap;
+bool compare(int arr1[], int arr2[])
+{
+    for (int i=0; i<MAX; i++)
+        if (arr1[i] != arr2[i])
+            return false;
+    return true;
+}
+
+string search(string pat, string txt)
+{
+    int M = pat.length(), N = txt.length();
+    long long mx=0;
+    string res="-1";
+    int countP[MAX] = {0}, countTW[MAX] = {0};
+    for (int i = 0; i < M; i++)
+    {
+        (countP[pat[i]-'a'])++;
+        (countTW[txt[i]-'a'])++;
+    }
+
+    for (int i = M; i < N; i++)
+    {
+        if (compare(countP, countTW))
+        {
+            mmap[txt.substr(i-M,M)]++;
+        }
+
+        (countTW[txt[i]-'a'])++;
+
+        countTW[txt[i-M]-'a']--;
+    }
+
+    if (compare(countP, countTW))
+    {
+       mmap[txt.substr(N-M,M)]++;
+    }
+    for(map<string,long long>::iterator it=mmap.begin();it!=mmap.end();it++)
+    {
+        int x=it->second;
+        if(x>mx)
+        {
+            mx=x;
+            res=it->first;
+        }
+        //cout<<it->first<<" : "<<it->second
+    }
+    mmap.clear();
+    return res;
+}
+
+int main()
+{
+    int q;
+    cin>>q;
+    string txt,pat;
+    while(q--)
+    {
+        cin>>pat>>txt;
+        cout<<search(pat, txt)<<endl;;
+    }
+    return 0;
+}
+
+
+/*
+By : Manjunath P Jakaraddi
+Date : 24/2/2018
+Problem : Hackerrank University Codesprint
+*/
+
+#include<bits/stdc++.h>
+#define N 1000006
+#define BLOCK 1000
+using namespace std;
+map<long long,int> cnt;
+int a[N],ans[N],answer=0;
+struct node
+{
+    int L,R,i;
+}q[N];
+bool cmp(node x,node y)
+{
+    if(x.L/BLOCK!=y.L/BLOCK)
+        return x.L/BLOCK > y.L/BLOCK;
+    return x.R < y.R;
+}
+void add(int position)
+{
+    cnt[a[position]]++;
+    if(cnt[a[position]]==1)
+    {
+        answer++;
+    }
+    else if(cnt[a[position]]==2)
+    {
+        answer--;
+    }
+}
+void remove(int position)
+{
+    cnt[a[position]]--;
+    if(cnt[a[position]]==1)
+    {
+        answer++;
+    }
+    else if(cnt[a[position]]==0)
+    {
+        answer--;
+    }
+}
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int n;
+    cin>>n;
+    for(int i=0;i<n;i++)    cin>>a[i];
+    int m;
+    cin>>m;
+    for(int i=0;i<m;i++)
+    {
+        cin>>q[i].L>>q[i].R;
+        q[i].L--;
+        q[i].R--;
+        q[i].i=i;
+    }
+    sort(q,q+m,cmp);
+    int currentL=0,currentR=0;
+    for(int i=0;i<m;i++)
+    {
+        int L = q[i].L,R = q[i].R;
+        while(currentL<L)
+        {
+            remove(currentL);
+            currentL++;
+        }
+        while(currentL>L)
+        {
+            add(currentL-1);
+            currentL--;
+        }
+        while(currentR<=R)
+        {
+            add(currentR);
+            currentR++;
+        }
+        while(currentR>R+1)
+        {
+            remove(currentR-1);
+            currentR--;
+        }
+        ans[q[i].i]=answer;
+    }
+    for(int i=0;i<m;i++)   cout<<ans[i]<<"\n";
+    return 0;
+}

@@ -1,0 +1,113 @@
+Quick Explanation
+Given two integers L and R, you need to find the count of special numbers between the given integers as mentioned in the problem statement.
+
+Solution
+To find count of special numbers in a particular range [L
+,R], we can always apply simple inclusion-exclusion principle and say that count of such numbers would be equal to get(0,R)-get(0,L-1).
+In short, get(L,R)=get(0,R)-get(0,L-1).
+Now, to calculate get(0,X) i.e count of special numbers, we follow a DP approach.
+We need to iterate all the numbers from 0 to X. What matters is how you iterate them such that you dont cross X. Also, we need to keep track of (∑Ni=1DiDi)%VALUE to verify whether the number formed at last was special or not. This VALUE should be such that with the help of this we can get the modulo with each and every digit. Hence this value should be VALUE=LCM(1,2,3,4,5,6,7,8,9)=2520.
+Lets keep a state F(idx, tight, Sum%VALUE, Visit) where idx denotes the index which we need to currently fill with any of the digits in range[0,9] and tight denotes whether the number we have formed till now is less than the current given X or equal to it. If its equal to it, then while filling the current index, we keep in mind so as to not to surpass the digit at idxth position of given X. if its not equal to it, we can fill any of the digit from [0,9], the number formed will still be smaller than X. Sum%VALUE is as explained above and Visit is the bitmask to store which all digits have occurred in this number.
+So, we need tight as 0 for smaller than X and 1 for equal to X in our current implementation.
+Look at this code for more details on the implementation : SOLUTION.
+
+
+
+The Great Ninja War is going on. Naruto got some information from his spy that there are some special troops in the enemy's army. Troops are numbered starting from 1
+
+.
+
+Special Troops are described as follows :-
+Let's say the troop number consists of N
+digits given as {D1,D2,D3,.....,DN}, for which the special sum S will be ∑Ni=1DiDi ∀ Di≠0.
+If all the digits Di ∀ i∈[1,N] and Di≠0 of that number completely divide the special sum S, then the troop is special.
+For example, consider the troop number 2024, the special sum S will be 22+22+44=264. As all the non-zero digits 2, 2 and 4 completely divide 264
+
+, hence the troop is special.
+
+Naruto asked you to find the number of special troops numbered between L
+and R (both inclusive).
+
+
+
+2
+10 20
+5 50
+
+3
+18
+
+
+ypedef pair<int, PII > PPII;
+typedef vector< PII > VPII;
+typedef vector< PPII > VPPI;
+const int MOD = 1e9 + 7;
+const ll INF = 1e12;
+// Template End
+const int LCM = 2520;
+ll dp[15][2530][520];
+int a[10];
+VII get_digits(ll x) {
+    VII dig;
+    while (x) {
+        dig.pb(x % 10);
+        x /= 10;
+    }
+    return dig;
+}
+ll recur(int idx, int sum, int mask, bool tight, VII dig) {
+    if (idx == -1) {
+        int x = 0, y = 0;
+        REP(i, 1, 10, 1) {
+            if (mask & (1 << (i-1))) {
+                x++;
+                if (sum % i == 0) y++;
+            }
+        }
+        return (x == y);
+    }
+    if (!tight and dp[idx][sum][mask] != -1) return dp[idx][sum][mask];
+    int k = tight ? dig[idx] : 9, newMask;
+    k++;
+    ll ret = 0;
+    REP(i, 0, k, 1) {
+        newMask = mask;
+        if (i) newMask = mask | 1 << (i - 1);
+        ret += recur(idx - 1, (sum + a[i]) % LCM, newMask, (dig[idx] == i) ? tight : false, dig);
+    }
+    if (!tight) dp[idx][sum][mask] = ret;
+    return ret;
+}
+int mpow (int a, int b, int c) {
+    int ret = 1;
+    while(b)
+    {
+        if(b & 1) ret = (ret * a) % c;
+        b >>= 1;
+        a = (a * a) % c;
+    }
+    return ret;
+}
+int main(int argc, char* argv[]) {
+    if(argc == 2 or argc == 3) freopen(argv[1], "r", stdin);
+    if(argc == 3) freopen(argv[2], "w", stdout);
+    ios::sync_with_stdio(false);
+    int t;
+    ll ans1, ans2;
+    VII digl, digr;
+    ll l, r;
+    cin >> t;
+    assert(1 <= t and t <= 3);
+    REP(i, 1, 10, 1) a[i] = mpow(i, i, LCM);
+    REP(i, 0, 15, 1) REP(j, 0, 2530, 1) REP(k, 0, 520, 1) dp[i][j][k] = -1;
+    while(t--) {
+        cin >> l >> r;
+        assert(1 <= l and l <= INF);
+        assert(1 <= r and r <= INF);
+        digl = get_digits(l-1);
+        digr = get_digits(r);
+        ans1 = recur(digl.size()-1, 0, 1, 1, digl);
+        ans2 = recur(digr.size()-1, 0, 1, 1, digr);
+        cout << ans2 - ans1 << endl;
+    }
+    return 0;

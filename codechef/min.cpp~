@@ -1,0 +1,19 @@
+#include<bits/stdc++.h>
+int  main()
+{
+  int t,n;
+  cin>>t;
+  int mn,x;
+  while(t--)
+  {
+    cin>>n;
+    mn=0;
+    while(n--)
+    {
+      cin>>x;
+      mn=min(mn,x)
+    }
+    cout<<mn<<endl;
+  }
+  return 0;
+}

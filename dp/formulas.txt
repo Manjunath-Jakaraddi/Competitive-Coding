@@ -1,0 +1,14 @@
+------------------------FIBONACCI------------------
+1)	FIB(n) = FIB(n-1) +  FIB(n-2);	n<=1 -> n
+2)	DP (OPTIMISE SPACE)
+3)	MATRIX M={{1,1},{1,0}};	FIB(n) = POWER(M,n)
+	OPTIMISE TO LOG(n) BY MAKING N=N/2 IN EVERY ITERRATION
+4)	N EVEN -> 	FIB(n)=FIB(k)^2+2*FIB(k-1)	k=n/2
+	N ODD  -> 	FIB(n)=FIB(k)^2+FIB(k-1)^2	k=(n+1)/2
+
+-----------------------nCk-----------------------
+1)	C(n,k)=C(n-1,k-1)+C(n-1,k)	C(n,0)=C(n,n)=0
+2)	DP	SPACE OPTIMISED CALCULATING FROM PREV ROW AND UPDATING ROW
+------------------------LONGEST COMMON SUBSEQUENCE---------------------
+1)	RECURSIVE EQUAL 1+SOLVE(x+1,y+1)	ELSE	MAX(SOLVE(x+1,y),SOLVE(x,y+1)
+

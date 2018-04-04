@@ -1,0 +1,330 @@
+The most basic brute force solution for this problem would be as follows:-
+
+    The 1st
+
+type of query can be processed in O(1)
+complexity.
+
+A[i]=A[i]+K
+
+The 2nd
+type of query can be processed in O(N) complexity by looping in the array from index L to index R
+.
+
+for i in range L to R<br>
+    A[i]=A[i]+K
+
+The 3rd
+type of query can be processed in O(N×P) complexity by looping through the array from index L to index R
+
+    and then raising each element of the array to the power P using another nested loop.
+
+    S=0
+    for i in range L to R
+        X=1
+        for j in range 1 to P
+            X=X*A[i]
+        S=S+X
+
+As the maximum number of queries can be 2×104, the above solution cannot pass the time limit. Hence, this calls for a better solution.
+Looking at the constraints, we can notice that P can be at max 10. Now we can have a seperate segment tree for each P. Then the solution can be as follows:-
+
+    The 1st
+
+type of query can be processed in O(log N)×10 complexity as we need to update the value of the array element i in the 10 segment trees by performing the update operation in each segment tree in O(log N)
+time complexity.
+
+update(node,start,end,i,v)
+    Perform Lazy Update on this Node
+    if start==end
+        tree[node][1]=tree[node][1]+v
+        for j in range 2 to 10
+            tree[node][j]=tree[node][j-1]*tree[node][1]
+        return
+    mid=(start+end)/2
+    if i<=mid
+        update(2*node+1,start,mid,i,v)
+    else
+        update(2*node+2,mid+1,end,i,v)
+    for j in range 0 to 10
+        tree[node][j]=tree[2*node+1][j]+tree[2*node+2][j]
+
+The 2nd
+type of query can be processed in O(log N)×10×10
+complexity by using lazy propagation.
+
+updateRange(node,start,end,l,r,x)
+    Perform Lazy Update on this Node
+    Transfer Lazy Values to the Children of this Node
+    if start>=l&&end<=r
+        for i in range 1 to 10
+        s=0
+        for j in range 0 to i
+            s=s+C(i,i-j)*pow(x,i-j)
+        temp[i]=s
+        for i in range 1 to 10
+            tree[node][i]=temp[i]
+        Transfer this value to the Children of this Node
+        return
+    mid=(start+end)/2
+    updateRange(2*node+1,start,mid,l,r,x)
+    updateRange(2*node+2,mid+1,end,l,r,x)
+    for i in range 0 to 10
+        tree[node][i]=tree[2*node+1][i]+tree[2*node+2][i]
+
+The 3rd
+type of query can be processed in O(log N)
+
+    complexity by performing a query with lazy propagation.
+
+    queryRange(node,start,end,l,r,p)
+        Perform Lazy Update on this Node
+        Transfer Lazy Values to the Children of this Node
+        if start>=l&&end<=r
+            return tree[node][p]
+        mid=(start+end)/2
+        return queryRange(2*node+1,start,mid,l,r,p)+
+                queryRange(2*node+2,mid+1,end,l,r,p)            
+
+For more details refer to the following code:-
+SOLUTION
+
+nclude <vector>
+#include <set>
+#include <map>
+#include <queue>
+#include <list>
+#include <math.h>
+#define ll long long int
+#define maxN 1000000
+#define maxVal 100000000
+#define minVal -100000000
+#define mod 1000000007LL
+#define gcd(a,b) __gcd(a,b)
+using namespace std;
+ll n;
+ll a[maxN+5];
+ll tree[3*maxN+5][12];
+ll lazy[3*maxN+5];
+ll comb[12][12];
+ll powmod(ll a,ll b)
+{
+	ll x=1,y=a;
+	while(b>0)
+	{
+		if(b%2)
+			x=(x*y)%mod;
+		y=(y*y)%mod;
+		b=b/2;
+	}
+	return x;
+}
+ll C(ll n,ll r)
+{
+	if(n==r)
+		return 1;
+	ll i,x=1,y=1;
+	for(i=(r+1);i<=n;i++)
+		x=(x*i)%mod;
+	for(i=1;i<=(n-r);i++)
+		y=(y*i)%mod;
+	return (x*powmod(y,mod-2))%mod;
+}
+void pre()
+{
+	ll i,j;
+	comb[0][0]=1;
+	for(i=1;i<=10;i++)
+		for(j=0;j<=i;j++)
+			comb[i][j]=C(i,j);
+}
+void makeNode(ll node,ll x)
+{
+	ll k;
+	x%=mod;
+	lazy[node]=0;
+	for(k=0;k<=10;k++)
+		tree[node][k]=powmod(x,k);
+}
+void combine(ll node)
+{
+	ll k;
+	for(k=0;k<=10;k++)
+		tree[node][k]=(tree[2*node+1][k]+tree[2*node+2][k])%mod;
+}
+void build(ll node,ll start,ll end)
+{
+	if(start==end)
+	{
+		makeNode(node,a[start]);
+		return;
+	}
+	ll mid=start+(end-start)/2;
+	build(2*node+1,start,mid);
+	build(2*node+2,mid+1,end);
+	combine(node);
+}
+void updateNode(ll node,ll x)
+{
+	ll i,j,s;
+	ll f[12];
+	x%=mod;
+	for(i=1;i<=10;i++)
+	{
+		s=0;
+		for(j=0;j<=i;j++)
+			s=(s+(((comb[i][i-j]*powmod(x,i-j))%mod)*tree[node][j])%mod)%mod;
+		f[i]=s;
+	}
+	for(i=1;i<=10;i++)
+		tree[node][i]=f[i];
+}
+void updateLazy(ll node,ll start,ll end)
+{
+	if(!lazy[node])
+		return;
+	updateNode(node,lazy[node]);
+	if(start!=end)
+	{
+		lazy[2*node+1]+=lazy[node];
+		lazy[2*node+2]+=lazy[node];
+	}
+	lazy[node]=0;
+}
+void pointUpdate(ll node,ll start,ll end,ll i,ll x)
+{
+	updateLazy(node,start,end);
+	if(start==end)
+	{
+		makeNode(node,tree[node][1]+x);
+		return;
+	}
+	ll mid=start+(end-start)/2;
+	if(i<=mid)
+	{
+		pointUpdate(2*node+1,start,mid,i,x);
+		updateLazy(2*node+2,mid+1,end);
+	}
+	else
+	{
+		pointUpdate(2*node+2,mid+1,end,i,x);
+		updateLazy(2*node+1,start,mid);
+	}
+	combine(node);
+}
+void rangeUpdate(ll node,ll start,ll end,ll l,ll r,ll x)
+{
+	updateLazy(node,start,end);
+	if(start>=l&&end<=r)
+	{
+		updateNode(node,x);
+		if(start!=end)
+		{
+			lazy[2*node+1]+=x;
+			lazy[2*node+2]+=x;
+		}
+		return;
+	}
+	ll mid=start+(end-start)/2;
+	if(l>mid)
+	{
+		rangeUpdate(2*node+2,mid+1,end,l,r,x);
+		updateLazy(2*node+1,start,mid);
+	}
+	else if(r<=mid)
+	{
+		rangeUpdate(2*node+1,start,mid,l,r,x);
+		updateLazy(2*node+2,mid+1,end);
+	}
+	else
+	{
+		rangeUpdate(2*node+1,start,mid,l,r,x);
+		rangeUpdate(2*node+2,mid+1,end,l,r,x);
+	}
+	combine(node);
+}
+ll query(ll node,ll start,ll end,ll l,ll r,ll k)
+{
+	updateLazy(node,start,end);
+	if(start>=l&&end<=r)
+		return tree[node][k];
+	ll mid=start+(end-start)/2;
+	if(l>mid)
+		return query(2*node+2,mid+1,end,l,r,k);
+	else if(r<=mid)
+		return query(2*node+1,start,mid,l,r,k);
+	else
+		return (query(2*node+1,start,mid,l,r,k)
+			+query(2*node+2,mid+1,end,l,r,k))%mod;
+}
+int main()
+{
+	ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    #ifndef ONLINE_JUDGE
+        freopen("input.txt","r",stdin);
+        freopen("output.txt","w",stdout);
+    #endif
+    ll t,q,i,n,c,l,r,k;
+    pre();
+    scanf("%lld",&t);
+    while(t--)
+    {
+    	memset(tree,0,sizeof(tree));
+    	memset(lazy,0,sizeof(lazy));
+    	scanf("%lld",&n);
+    	for(i=0;i<n;i++)
+    		scanf("%lld",&a[i]);
+    	build(0,0,n-1);
+    	scanf("%lld",&q);
+    	while(q--)
+    	{
+    		scanf("%lld",&c);
+    		if(c==1)
+    		{
+    			//pointUpdate
+    			scanf("%lld%lld",&i,&k);
+    			pointUpdate(0,0,n-1,i-1,k);
+    		}
+    		else if(c==2)
+    		{
+    			//rangeUpdate
+    			scanf("%lld%lld%lld",&l,&r,&k);
+    			rangeUpdate(0,0,n-1,l-1,r-1,k);
+    		}
+    		else
+    		{
+    			//query
+    			scanf("%lld%lld%lld",&l,&r,&k);
+    			printf("%lld\n",query(0,0,n-1,l-1,r-1,k));
+    		}
+    	}
+    }
+    return 0;
+}
+
+
+1iK : Update the result of training of the ith ninja i.e. increase the amount of chakra of the ith ninja by K
+.
+2LRK
+: Update the result of training of the ninjas ranging from L to R i.e. increase the amount of chakra of the ninjas ranging from L to R by K
+.
+3LRP
+: Calculate the total strength of the ninjas ranging from L to R provided that each of these ninjas have rank P for sending them to a mission assigned to the Leaf Village. As the value can be very large, calculate it modulo 109+7.
+
+1
+5
+1 5 9 2 3
+5
+3 1 3 3
+2 2 4 3
+3 1 3 3
+1 2 4
+3 1 3 3
+
+
+855
+2241
+3457
+
+1^3+5^3+9^3=855
