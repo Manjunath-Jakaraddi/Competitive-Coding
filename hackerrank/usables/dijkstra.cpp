@@ -19,7 +19,7 @@ inline void prep()
 }
 class dijkstra
 {
-    vi dist,vis;
+    vi dist;
     vector<vii> edges;
     int N,E;
   public:
@@ -30,7 +30,6 @@ class dijkstra
       this->E=e;
       edges.assign(n,vii());
       dist.assign(n,INT_MAX);
-      vis.assign(n,0);
     }
     void read()
     {
@@ -39,9 +38,9 @@ class dijkstra
       loop(i,E)
       {
         cin>>x>>y>>wt;
-        x--;y--;
+        // x--;y--;
         edges[x].pb({wt,y});
-        edges[y].pb({wt,x});
+        // edges[y].pb({wt,x});
       }
     }
     void run(int s)
@@ -53,9 +52,8 @@ class dijkstra
       {
         ii z=*pq.begin();pq.erase(pq.begin());
         int frm=z.second,wei=z.first;
-        if(vis[frm])  continue;
+        if(wei>dist[frm])  continue; //Lazy deletion
         // cout<<frm<<"-->";
-        vis[frm]=1;
         for(auto it:edges[frm])
         {
           int to=it.second,wt=it.first;
@@ -79,7 +77,7 @@ int main()
   cin>>n>>e;
   dijkstra dk(n,e);
   dk.read();
-  dk.run(0);
+  dk.run(2);
   dk.printdist();
 	return 0;
 }

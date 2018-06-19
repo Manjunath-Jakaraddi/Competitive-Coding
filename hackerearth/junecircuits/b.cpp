@@ -27,15 +27,18 @@ bool rect(int x,int y,int z)
   return false;
 }
 int n;
-int arr[200005];
+ll arr[200005],dp[200005];
 int main()
 {
 	prep();
   cin>>n;
-  loop(i,n) cin>>arr[i];
-  ll res=2*n-1;
-  for(int i=0;i<n-2;i++)
-    if(rect(arr[i],arr[i+1],arr[i+2]))  res++;
-  cout<<res<<"\n";
+  loop(i,n) cin>>arr[i+1];
+	dp[1]=1;
+  for(int i=2;i<=n;i++)
+  {
+		dp[i]=(2+dp[i-1]);
+		if(i>2)	dp[i]+=(rect(arr[i],arr[i-1],arr[i-2]));
+	}
+	cout<<dp[n]<<"\n";
   return 0;
 }

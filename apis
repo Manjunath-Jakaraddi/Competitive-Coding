@@ -107,6 +107,10 @@ I
 --------
 DETECTING CYCLES: BACK EDGES not !vis in dfs
 BFS -> O(V+E) adj list else O(V2) shortest distance and all possibilites at particular distance and 0/1 bfs with weights 1
+	Variants : Implicit graphs 2d 3d
+		   with some Blocked vertices
+	           multisources BFS
+		   Source destination interchanged
 DFS -> O(V+E) adj list else O(V2) check all possibilites in one direction and no of connected components
 MST -> minimum cost with n-1 edges with weights
 SHORTEST PATHS -> can be done with bfs but with weights
@@ -114,11 +118,26 @@ SHORTEST PATHS -> can be done with bfs but with weights
 		TWO ALGOS
 		1) KRUSKAL (ElogV) for sorting --> greedy edges smallest to largest edges with UDFS Data structure to check if nodes belong to same set
 		2) Prims ((V+E)logV) logV because insertion into priority queue -->  greedy next nodes use priority queue to maintain the next least 				weighted edge and simliar to post bfs(POST!!?)
+	Variants 1) minimum spanning subgraph ->  with fixed edges already given keep runngin kruskal for the rest
+		 2) maximum spanning tree -> run kruskal by reveser sorting
+		 3) minimum spanning forest -> form k components forest run kruskal and stop when k components are found
+		 4) second mst -> form first using kruskal ElgV and then for each v-1 edges in mst remove and try E edges O(VE) take the minimum. 
+			(HINT : can do better using lca or ufds try!!)
+		 5)minimax path problem is a problem of finding the minimum of maximum edge weight among all possible paths between two vertices itoj.
+		       Can be found by MST+max edge in the MST O(ElogV+V) similiar can be use for maximin
 SSSP(Single Source Shortest Path) ==> 
 		1) Bellmann ford O(V.E) if V=E2 then O(E3) --> only positive edges two loops 0 to n-1 and pairs of edges {wt,x,y} dist[y]>dist[x]+wt 				relax
-		2) dijkstra normally O(V2) but with priority queue reduces to O(V+ElogV) --> similiar to prims instead of greedy edges greedy total 				distances using multiset as priority queue
+		2) dijkstra normally (Wrong ans if -ve cycles are present not -ve edges) O(V2) but with priority queue reduces to O(V+ElogV) --> 				similiar to prims instead of greedy edges greedy total distances using multiset as priority queue
 ALL PAIR SHORTEST PATHS --> 
-		1) Floyd Warshall O(V3) three loops ktoN itoN jtoN d[i][j]=min(d[i][j],d[i][k]+d[k][j])
+		1) Floyd Warshall O(V3) for V<400 three loops ktoN itoN jtoN d[i][j]=min(d[i][j] (not consider k),d[i][k]+d[k][j] (consider k) 
+		dp state(frm i,to j,intremediate k) k=[-1to V-1] -1 meaning representing edge without any intermediate
+		Space reqd dp[k][i][j] but space saving trick as only k-1 table reqd to compute the next table of (i,j)
+		Variants --> 1) par[i][j]=i to print path
+			     2) bit manip is_connected[i][j]|=(is_connected[i][k]&is_connected[k][j])
+			     3) cheapest negative cycle initalize main diagonal (i,i) to INF if reduced then -ve cycle as (i,i) distance indicates 					cycle and the smallest non negative value is the cheapest negative cycle value.
+		 	     4) minimax minimax[i][j]=min(minimax[i][j],max(minimax[i][k],minimax[k][j]));
+			     5) Diameter of the graph solve floyd O(V3) and max value in dist in O(V2) printpath the lenght of path is diameter of grap
+			     6) find SCC's for small graph using is_connected[i][j]&&is_connected[j][i] then i,j belong to same SCC
 FLOOD FILL  --> O(m.n)	
 ARTICULATION POINTS AND BRIDGES: O(V+E) same as DFS or BFS No Bridge but can have articulation point but in bridge one of the nodes will be 					articulation point
 				presence of a cycle indicates articulation point as the lowlink==id fails only when has 0 or 1 outgoind edges i.e root
@@ -137,6 +156,19 @@ Strongly connected graphs and components :
 TOPOLOGICAL SORT : 1 ) Using BFS O(V+E) not visited and indegree zero push into queue and also into tsort array at front while poping from queue and 				also subtract indegrees from the poped vertex from the queue..For lexicographically toposrt use set or priority queue instead
 		   2 ) Using DFS O(V+E) go on pushing onto the stack (or array) after exploring (reverse array )
 BIPARTITE or two colorable: using bfs color source with one color next layer with other if any violations conclude not biparitie and bipartite graph 					has not odd cycle
+SPECIAL GRAPHS:1) DAG -> easy for dp states vertices directed edges transitions and topological sort overlapping subproblems.
+			i)longest path in dag use SSSP multiply edge weights by -1.
+			ii) counts paths in dag dp[0]=1 and dp[v]+=dp[u] vertex u in topsort having edge u->v 
+	       2) TREE -> articulation point O(V) find vertices with deg > 1 and all edges are bridges
+			  SSSP Shortest path all paths are unique so just add the edge weights BFS or DFS O(V)
+			  APSP call SSSP V time O(V2)
+			  Diameter of graph (for other graps floyd O(V3) and then largest find O(V2) ) but in tree do DFS/BFS twice first find the 				  furtherst reach and then dfs/bfs from there to again the furthest.
+	       3) EULERIAN:Euler path is defined as a path in a graph which visits each edge of the graph exactly once.
+			   CHECK FOR Euler Path: If zero or two vertices have odd degree and all other vertices have even degree. Note that only one 				   vertex with odd degree is not possible in an undirected graph (sum of all degrees is always even in an undirected graph)
+			   i.e in simple all the vetices except start and end should have degree two(one for coming and other going)
+			   Euler tour/cycle is an Euler path which starts and ends on the same vertex.
+			   CHECK FOR EULRIAN CYCLE/TOUR: All the vertices should be of even degree
+	       4) BIPARTITE: set of vertices V can be partitioned into two disjoint sets V 1 and V 2 and all edges in (u, v) ∈ E has the property 				   that u ∈ V 1 and v ∈ V 2
 II
 ---------
 LCA(Least Common ANcestor Binary Uplifting ) table[k][i] k->2^kth jump i -> node 
@@ -191,6 +223,52 @@ SUBARR OR SUBSTRING -->  N^2
 SUBSEQUENCE --> 2^N -1 (excluding empty )
 SUBSET --> 2^N (including EMPTY SET )
 PERMUTATIONS --> N! do{...}whilenext_permutation(all(str));
+
+MATHEMATICS:
+Root of the Polynomial equation : NEWTON RAPHSON x(n+1) = x(n) - h; (where h = f(x)/f'(x))
+				    double h = func(x) / derivFunc(x);
+				    while (abs(h) >= EPSILON)
+					h = func(x)/derivFunc(x);
+					// x(i+1) = x(i) - f(x) / f'(x)  
+					x = x - h;
+
+				For Nth root we assume f(x) = x^n-A
+Raphini horners method to find given number is root of equation or not	f(x)=x3+4x2+x-6 write coeff
+										1  4  1 -6 to check if x+3 is root or not
+									    -3  0 -3 -3  6 first will always be zero
+									        1  1 -2  0  if zero atlast then it is root
+JAVA BIGINTEGER : 1) to compute in different bases  where p and m are numbers in base b
+			BigInteger p = new BigInteger(sc.next(), b); 
+			BigInteger m = new BigInteger(sc.next(), b);
+			System.out.println((p.mod(m)).toString(b));
+  		  2) to check probable prime num.isProbablePrime(certinity) --> (1-(1/2)^certainity is the accuracy usuall 10 is enough for cp)
+		  3) gcd num_p.gcd(num_q)
+		  4) BigInteger p = BigInteger.valueOf(b); Value of converts normal intgers to BigIntegers
+		     modular base.modPow(exp,mod)
+Binets formula : for nth Fibonacci number : (φ^n − (−φ)^−n )/sqrt(5) (Binet’s formula) where φ (golden ratio)is ((1 + sqrt(5))/2) ≈ 1.618.
+Zeckendorf’s theorem: Every positive integer can be written in a unique way as a sum of one or more distinct Fibonacci numbers such that the sum does 			      not include any two consecutive Fibonacci numbers.
+Pisano Period where the last one/last two/last three/last four digit(s) of a Fibonacci number repeats with a period of 60/300/1500/15000, respectively
+Catlan Numbers: Cat(n) = ( (2×n) C n )/(n + 1); Cat(0) = 1.
+		Cat(m) = ((2m×(2m−1))/((m+1)×m)) *Cat(m − 1)
+		Used 1) Cat(n) counts the number of distinct binary trees with n vertices
+int gcd(int a, int b) { return b == 0 ? a : gcd(b, a % b); } O(log10(n)), where n = max(a, b).
+int lcm(int a, int b) { return a * (b / gcd(a, b)); }
+prime numbers are multiplicative building blocks of integers (the fundamental theorem of arithmetic)
+prime sieve O(NloglogN) (N× (1/2 + 1/3 + 1/5 + 1/7 + . . . + 1/last prime in range ≤ N))
+Prime Factors N = PF * N' where N is the number whose prime factors are to be found 
+				PF is one of the prime factors that divide it and 
+				N' is the number we get after dividing which is the new N.
+	find till sqrt(N) if PF exceeds sqrt(N) than we can conclude that number is prime!!
+Number of divisors = a^i × b^j × . . . × c^k , then N has (i + 1) × (j + 1) × . . . × (k + 1) divisors. where a<b<c are prime numbers 
+Sum of Divisors of N is (a^(i+1)-1/(a−1)) × (b^(j+1)-1/(b−1))  ×...× (c^(k+1)-1/(c−1))
+Euler Phi : φ(N) = N × Prod(pf) (1 − 1/P F )
+TO STUDY
+---------
+Totiet Videos https://www.youtube.com/watch?v=ccpl3GXMy38
+DP
+DP on tree DAG
+NETWORK FLOW
+
 QUESTIONS
 ----------
 why do u want to work for this company --> research abt company and products and what they do and what u have to offer

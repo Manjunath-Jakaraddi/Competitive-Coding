@@ -33,9 +33,8 @@ int prim(int s)
     mncost+=x.first;
     vis[x.second]=1;
     cout<<x.second+1<<"-->";
-    for(auto it:edges[x.second])
-      if(!vis[it.second])
-        pq.push(it);
+    for(auto it:edges[x.second])	if(!vis[it.second])
+      pq.push(it);
   }
   return mncost;
 }
