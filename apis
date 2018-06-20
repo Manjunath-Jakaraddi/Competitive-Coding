@@ -194,7 +194,7 @@ Check If tree is symmetric or mirror
         if(p==NULL||q==NULL)    return p==q;
         return (p->val==q->val&&check(p->left,q->right)&&check(p->right,q->left));
 
-MODULAR
+	ULAR
 ---------
 ANY NUMBER CAN BECOME VALID WHEN MODDED TOO
 i.e Number of large ranges computer within the mods even divisibility test satisfy
@@ -224,7 +224,8 @@ SUBSEQUENCE --> 2^N -1 (excluding empty )
 SUBSET --> 2^N (including EMPTY SET )
 PERMUTATIONS --> N! do{...}whilenext_permutation(all(str));
 
-MATHEMATICS:
+MATHEMATICS: (IF VERY BIG INTERGERS 3 METHODS : 1) JAVA BIG INTEGER. 2) WORK WITH PRIME FACTORS. 3) MODULAR ARITHMATIC. )
+I) NUMBER THEORY
 Root of the Polynomial equation : NEWTON RAPHSON x(n+1) = x(n) - h; (where h = f(x)/f'(x))
 				    double h = func(x) / derivFunc(x);
 				    while (abs(h) >= EPSILON)
@@ -262,8 +263,24 @@ Prime Factors N = PF * N' where N is the number whose prime factors are to be fo
 Number of divisors = a^i × b^j × . . . × c^k , then N has (i + 1) × (j + 1) × . . . × (k + 1) divisors. where a<b<c are prime numbers 
 Sum of Divisors of N is (a^(i+1)-1/(a−1)) × (b^(j+1)-1/(b−1))  ×...× (c^(k+1)-1/(c−1))
 Euler Phi : φ(N) = N × Prod(pf) (1 − 1/P F )
+Derangement (DP) formula : A(n) = (n − 1) × (A(n−1) + (A n−2) 
+CYCLE FINDING : hare and tortoise x(i)=x(i+kλ)
+	Finding kλ : first start hare and tortoise from beginning and tortoise 1 step and hare 2 steps until both equal
+	Finding μ: reset hare to start and tortoise at same and move both iteratively as difference b/w then is kλ first occurence of both equal stop 			   and the point where the hare point is the value of μ.
+	Finding λ: now tortoise at same place and move hare to next of tortoise and move hare iteratively to right one step when same value as 			   tortoise then the difference b/w them is value of λ.
+
+II) MODULAR ARITHMATIC:
+1) (a + b - c) % s = ((a % s) + (b % s) - (c % s) + s) % s
+2) (a * b) % s = (a % s) * (b % s)
+3) (a * b) % s = ((a % s) * (b % s)) % s
+4) (a / b) % s = ((a % s) / (b % s)) % s
+5) (a^b ) % s = ((a^(b/2) % s) * (a^(b/2) % s)) % s; assume that b is even.
 TO STUDY
 ---------
+More Advanced Topics
+Geometry
+String 
+Linear Diophatine Equation
 Totiet Videos https://www.youtube.com/watch?v=ccpl3GXMy38
 DP
 DP on tree DAG

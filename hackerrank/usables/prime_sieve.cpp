@@ -106,24 +106,65 @@ ll EulerPhi(ll N)
   if(N!=1)  ans-=ans/N;
   return ans;
 }
+
+ll Phi[10000010];
+ll _sieve_EulerPhi_size;
+void sieve_EuelerPhi(ll upperbound)
+{
+  _sieve_EulerPhi_size=upperbound+1;
+  for(int i=1;i<=_sieve_EulerPhi_size;i++)  Phi[i]=i;
+  for(int i=2;i<=_sieve_EulerPhi_size;i++)
+    if(Phi[i]==i)
+      for(int j=i;j<=_sieve_EulerPhi_size;j+=i)
+        Phi[j]-=Phi[j]/i;
+}
+ll Pillai[10000010];
+ll _sieve_Pillai_size;
+void sieve_Pillai(ll upperbound)
+{
+  _sieve_Pillai_size=upperbound+1;
+  for(int i=2;i<=_sieve_Pillai_size;i++)
+    for(int j=i;j<=_sieve_Pillai_size;j+=i)
+      Pillai[j]+=(i*Phi[j/i]);
+}
+ll numDiffPF[10000010];
+ll _sieve_numDiff_size;
+void sieve_numDiff(ll upperbound)
+{
+  _sieve_numDiff_size=upperbound+1;
+  for(int i=2;i<=_sieve_numDiff_size;i++)
+    if(numDiffPF[i]==0)
+      for(int j=i;j<=_sieve_numDiff_size;j+=i)
+        numDiffPF[j]++;
+}
 int main()
 {
 	prep();
+  // For All the Sieve apply modular
   sieve(10000000);
+  sieve_EuelerPhi(10000000);
+  sieve_Pillai(10000000);
+  sieve_numDiff(10000000);
   pf("Last Prime : %d\n",primes[(int)primes.size()-1]);
   pf("Is Prime : %d\n",isPrime(142391208960LL));
   vi r1=primeFactors(142391208960LL);
   vi r2=diffPF(142391208960LL);
   ll numDivisors = numOfDivisors(142391208960LL);
   ll smDivisors= sumOfDivisors(142391208960LL);
-  cout<<"Prime Factors : ";
+  cout<<"Prime Factors of (142391208960) : ";
   for(auto it:r1) cout<<it<<" ";  cout<<"\n";
-  cout<<"Distinct Prime Factors : ";
+  cout<<"Distinct Prime Factors of (142391208960) : ";
   for(auto it:r2) cout<<it<<" "; cout<<"\n";
-  cout<<"Num of Divisors : "<<numDivisors<<"\n";
-  cout<<"Sum of Divisors : "<<smDivisors<<"\n";
-  cout<<"Euler Phi : "<<EulerPhi(36)<<"\n";
-  cout<<__gcd(167616,96800)<<"\n";
-  cout<<(167616*(96800/__gcd(167616,96800)))<<"\n";
+  cout<<"Num of Divisors of (142391208960) : "<<numDivisors<<"\n";
+  cout<<"Sum of Divisors of (142391208960) : "<<smDivisors<<"\n";
+  cout<<"Euler Phi(36): "<<EulerPhi(36)<<"\n";
+  cout<<"Phi Values : ";
+  rep(i,2,10) cout<<Phi[i]<<" ";  cout<<"\n";
+  cout<<"Pillai value or SUM[gcd(k,n)] : ";
+  rep(i,2,10) cout<<Pillai[i]<<" ";  cout<<"\n";
+  cout<<"Number of Distinct Primes Factors : ";
+  rep(i,2,10) cout<<numDiffPF[i]<<" ";  cout<<"\n";
+  cout<<"GCD of (167616,96800) : "<< __gcd(167616,96800)<<"\n";
+  cout<<"LCM of (167616,96800) : "<<(167616*(96800/__gcd(167616,96800)))<<"\n";
 	return 0;
 }
