@@ -5,6 +5,29 @@ pq.push()
 pq.top()
 pq.pop()
 
+SORTING
+---------
+BUBBLE SORT    : O(N^2) Worst when arr is desc and O(N) Best when sorted O(1) space (Stable and inplace)
+Selection Sort : O(N^2) and O(1) space adv as never makes more writes when memory operations are costly
+Insertion sort : (playing cards) O(n^2) if desc and O(n) if asc and O(1) space (Inplace and stable and online) adv when almst sorted and (Binary 		         Insertion Sort which uses binary search to search elements in array)
+Merge sort     : O(nlogn) in all cases O(n) space (Stable) no random access of data as in quicksrt(linked list)
+		1) Inversion count 2) External sorting when large data in hardisk
+HEAP SORT      : O(nlogn) time and O(n) space (inplace typical imple not stable but can be made stable)
+		1) k largest elements
+		2) sort elements in K almost sorted (insert first k+1 elements in heap go on removing and displaying in sorted order as elements are 			 only k steps away cannot escape)
+Counting Sort  : O(n+k) time and space k is num of digits or characters adv sorting text as characters are in known range
+Bucket sort    : floating point created linkedlist and then sort them
+shell sort     : O(n^2)	choose gap=n/2 initially then go on comparing and swaping then reduce gap/=2; until zero
+Radix sort     : O(d*(n+b)) d->digits and b-> base of number uses counting sort as subrotine and can sort only numbers
+
+SEARCHING
+----------
+Linear : sorted or unsorted O(n)
+Binary : sorted log(n)
+JUMP : sorted sqrt(n)
+INTERPOLATION Search : Uniform data better than binary search
+		       If elements are uniformly distributed, then O (log log n)). In worst case it can take upto O(n).
+		       pos=lo+[(x-arr[lo])/(arr[hi]-arr[Lo])]*(hi-lo)		x     ==> Element to be searched
 HEAP
 ---------
 maxheap ==> less<int>()
@@ -45,6 +68,11 @@ LCSubstr = f(i,j) 1+f(i-1,j-1)	if(s1[i-1]==s2[j-1])
 Egg Drop = 1+min(forxfloors max(f(x-1,e-1),f(n-x,e))
 	  f(1,j)=1; f(i,1)=i;
 LIS two loops i-> 1ton and j-> 1toi
+Longest Palindomic Substring : 1) search all possibilities O(N^3) or expand from all in two dir O(n^2)
+			       2) DP   if(i==j)  return 1;
+				       if(s[i]==s[j])  return 2+solve(i+1,j-1);
+				       return max(solve(i+1,j),solve(i,j-1)); 
+			       3) Manachars Algo
 LCA 
 0/1 knapsack == (i,w) -- (i+1,w+wi) right to left
 		      -- (i+1,w)
@@ -193,8 +221,19 @@ Check If given is BST ;
 Check If tree is symmetric or mirror
         if(p==NULL||q==NULL)    return p==q;
         return (p->val==q->val&&check(p->left,q->right)&&check(p->right,q->left));
+Construct bbinary tree with 1) inoder and preorder
+			    2) inorder and postorder
+			    3) preorder and postorder(possible if only the tree is full binary tree)
+INFO : The maximum number of nodes at level ‘l’ of a binary tree is 2^(l-1).
+       Maximum number of nodes in a binary tree of height ‘h’ is 2^h – 1.
+       In a Binary Tree with N nodes, minimum possible height or minimum number of levels is  ceil Log2(N+1).
+       A Binary Tree with L leaves has at least   ⌈ Log2L ⌉ + 1   levels.
+       Full Binary Tree A Binary Tree is full if every node has 0 or 2 children. L = I + 1 Where L = Number of leaf nodes, I = Number of internal nodes
+       Complete binary tree eg HEAP
+       Perfect Binary TRee all have 2 childrens and leaves at same level
+       Balanced Binary Trees R-B trees difference between heights of left and right subtrees is 1
 
-	ULAR
+MODULAR
 ---------
 ANY NUMBER CAN BECOME VALID WHEN MODDED TOO
 i.e Number of large ranges computer within the mods even divisibility test satisfy
@@ -207,6 +246,7 @@ divisibility by 3 --> number of oddbits set - number of even bits set should be 
 1)get the duplicate element 1,2,2,3
 exor with 1 to n IMP--Bit set in resulting exor will be set atleast in one of the repeating numbers so seperate them into two groups by taking LSB x&=-x and then exor the arr[i] checking the bit set or not at rightmost got by x&-x
 
+2) Maximum range in range l to r if given by msb in l^r (msb<<1)-1
 
 Arrays
 --------
@@ -262,14 +302,30 @@ Prime Factors N = PF * N' where N is the number whose prime factors are to be fo
 	find till sqrt(N) if PF exceeds sqrt(N) than we can conclude that number is prime!!
 Number of divisors = a^i × b^j × . . . × c^k , then N has (i + 1) × (j + 1) × . . . × (k + 1) divisors. where a<b<c are prime numbers 
 Sum of Divisors of N is (a^(i+1)-1/(a−1)) × (b^(j+1)-1/(b−1))  ×...× (c^(k+1)-1/(c−1))
-Euler Phi : φ(N) = N × Prod(pf) (1 − 1/P F )
+Euler Phi : φ(N) = N × Prod(pf) (1 − 1/P F );  sum of totient of all divisors = N;
 Derangement (DP) formula : A(n) = (n − 1) × (A(n−1) + (A n−2) 
 CYCLE FINDING : hare and tortoise x(i)=x(i+kλ)
 	Finding kλ : first start hare and tortoise from beginning and tortoise 1 step and hare 2 steps until both equal
 	Finding μ: reset hare to start and tortoise at same and move both iteratively as difference b/w then is kλ first occurence of both equal stop 			   and the point where the hare point is the value of μ.
 	Finding λ: now tortoise at same place and move hare to next of tortoise and move hare iteratively to right one step when same value as 			   tortoise then the difference b/w them is value of λ.
-
+Extended Euclidean:  Equation ax+by=c d=gcd(a,b)
+		     # 3 Cases 1) if d do divide c no solution
+			       2) if d==c unique solution(x0,y0) i.e ax+by=gcd(a,b)
+			       3) if d divide c infinite solution x = x0+(b/d)n and y=y0-(a/d)n
+				extendedEuclid(int a,int b)
+				  if(b==0) { x=1;y=0;d=a; return; }
+				  extendedEuclid(b,a%b);
+				  int x1=y;
+				  int y1=x-(a/b)*y;
+				  x=x1;
+				  y=y1;
+CHINESE REMAINDER THEOREM : Z=Cimod(bi)	Z=SUM(Bi*inv(Bi)*Ci)%B;	B -> product(bi) and Bi=B/bi
+			    Basically converting all to same modular B which is products of all modular product(bi) by multiplying the other bi 			    product and also there inverses and then adding them and modding with prod gives the answer
+HUFFMANN CODING : Make a tree take freq of all the alphabets	https://www.youtube.com/watch?v=vt_Z6tdV81Q
+		Recursively combine min two nodes and form single node with sum of both do until full tree is formed
+		then left of tree 0 right 1 code the aplbets with given 0111 string while decode traverse through node with same tree
 II) MODULAR ARITHMATIC:
+Primality Test : if n is prime then a^(n-1)=1 modn Fermat's theorem. a^(n-2)modn=Inv(a)
 1) (a + b - c) % s = ((a % s) + (b % s) - (c % s) + s) % s
 2) (a * b) % s = (a % s) * (b % s)
 3) (a * b) % s = ((a % s) * (b % s)) % s
@@ -277,7 +333,7 @@ II) MODULAR ARITHMATIC:
 5) (a^b ) % s = ((a^(b/2) % s) * (a^(b/2) % s)) % s; assume that b is even.
 TO STUDY
 ---------
-More Advanced Topics
+More Advanced Topics	
 Geometry
 String 
 Linear Diophatine Equation
@@ -289,3 +345,5 @@ NETWORK FLOW
 QUESTIONS
 ----------
 why do u want to work for this company --> research abt company and products and what they do and what u have to offer
+Uva Hunt http://codeforces.com/blog/entry/54526
+Find Number Patterns http://oeis.org

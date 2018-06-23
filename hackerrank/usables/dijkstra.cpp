@@ -38,7 +38,7 @@ class dijkstra
       loop(i,E)
       {
         cin>>x>>y>>wt;
-        // x--;y--;
+        x--;y--;
         edges[x].pb({wt,y});
         // edges[y].pb({wt,x});
       }
@@ -50,6 +50,7 @@ class dijkstra
       pq.insert({0,s});
       while(!pq.empty())
       {
+				cout<<"!";
         ii z=*pq.begin();pq.erase(pq.begin());
         int frm=z.second,wei=z.first;
         if(wei>dist[frm])  continue; //Lazy deletion
@@ -77,7 +78,7 @@ int main()
   cin>>n>>e;
   dijkstra dk(n,e);
   dk.read();
-  dk.run(2);
+  dk.run(0);
   dk.printdist();
 	return 0;
 }
