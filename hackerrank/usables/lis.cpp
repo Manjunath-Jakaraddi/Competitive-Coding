@@ -19,22 +19,39 @@ inline void prep()
 }
 int n;
 int arr[100],lis[100];
+void bup()
+{
+	for(int i=1;i<n;i++)
+		for(int j=0;j<i;j++)
+			if(arr[i]>arr[j]) lis[i]=max(lis[i],1+lis[j]);
+	cout<<*max_element(lis,lis+n)<<"\n";
+}
+// Optimised Method
+int parent[100],LIS[100];
+vi increasing;
+int insertInPlace(int x)
+{
+	if(increasing.size()==0)	increasing.pb(x);
+	auto it=lower_bound(all(increasing),x);
+	if(it==increasing.end())	increasing.pb(x);
+	int ind=it-increasing.begin();
+	increasing[ind]=x;
+}
+void Optimised()
+{
+	loop(i,n)	insertInPlace(arr[i]);
+	for(auto it:increasing)	cout<<it<<" ";	cout<<"\n";
+}
 int main()
 {
 	prep();
   cin>>n;
-  rep(i,1,n)
+  loop(i,n)
   {
     cin>>arr[i];
     lis[i]=1;
   }
-  for(int i=2;i<=n;i++)
-  {
-    for(int j=1;j<i;j++)
-    {
-      if(arr[i]>arr[j]) lis[i]=max(lis[i],1+lis[j]);
-    }
-  }
-	cout<<*max_element(arr,arr+n)<<"\n";
+	bup();
+	Optimised();
   return 0;
 }

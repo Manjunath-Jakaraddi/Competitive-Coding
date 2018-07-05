@@ -19,25 +19,27 @@ inline void prep()
 	cin.tie(0);
 	cin.sync_with_stdio(0);
 }
-string s1,s2;
-int lcs[100][100];
+// Can solve upto n=16(approx) without TLE
+int dist[20][20];
+int n;
+int dp[1<<20][20];
+int tsp(int c_mask,int pos)
+{
+  if(c_mask==((1<<n)-1))  return dist[pos][0];
+  if(dp[c_mask][pos]) return dp[c_mask][pos];
+  int ans=INT_MAX;
+  loop(i,n)
+  {
+    if((1<<i)&c_mask) continue;
+    ans=min(ans,dist[pos][i]+tsp(c_mask|(1<<i),i));
+  }
+  return (dp[c_mask][pos]=ans);
+}
 int main()
 {
 	prep();
-  cin>>s1>>s2;
-  s1=" "+s1;
-  s2=" "+s2;
-  for(int i=1;i<s1.length();i++)
-  {
-    for(int j=1;j<s2.length();j++)
-    {
-      if(s1[i]==s2[j])  lcs[i][j]=1+lcs[i-1][j-1];
-      else  lcs[i][j]=max(lcs[i-1][j],lcs[i][j-1]);
-    }
-  }
-  loop(i,s1.length())
-    loop(j,s2.length())
-      cout<<lcs[i][j]<<(j==(int)s2.length()-1?"\n":" ");
-  cout<<lcs[(int)s1.length()-1][(int)s2.length()-1]<<"\n";
-  return 0;
+  cin>>n;
+  loop(i,n) loop(j,n) cin>>dist[i][j];
+  cout<<tsp(1,0)<<"\n";
+	return 0;
 }

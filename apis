@@ -42,6 +42,18 @@ make_heap(all(vec),greater<int>()) ==> minheap
 vec.push_back(ele) and push_heap(all(vec),greater<int>()) ==> pushing
 ele=vec.front();pop_heap(all(vec),greater<int>());vec.pop_back() ==> poping
 
+STACKS
+-------
+Max Rectangle in Histogram: If height less than equal to stack top than push to stack (stack contains increasing order)
+else 
+      if(!st.empty()) area=(i-st.top()-1)*ht[ind];
+      else  area=i*ht[ind];
+      ans=max(ans,area);
+
+STRINGS
+---------
+Finding is Subsequence or not : search from left to right the given string O(m+n)[m to be searched in n] 
+	if many strings to check preprocess the first string by inserting all the position of the alphabets into the map and then while searching 		search for the smallest index of character of m in n if present continue else return false same as above logic of left to right with smallest 		index matching 
 bitset
 ------
 bitset<500> bt; 0 based
@@ -71,25 +83,53 @@ Minimum edit distance f(i,j) = min(f(i,j-1)+ca,
 				   f(i-1,j-1)+ct if(s[i-1]==s[j-1]) ct=0;
 				   ) 
 		       f(i,0)=i;f(0,j)=j;
+K-Transactions : Two Cases (i -> number of transactions j -> days )
+	T(i,j)= max 1) (Exclusion of transaction) T[i][j-1] Previous days transactions
+		    2) (Inclusion of Transaction) T[i-1][m]+(price[j]-price[m])	
+			When included many options for including of m previous days for given current day j
 LCS ==> f(i,j)=max(f(i,j-1),f(i-1,j)) if(s[i-1]==s[j-1]) f(i,j)=1+f(i-1,j-1)
+Longest Uncommon Subsequence : if both same 0 else max(both lengths)
 LCSubstr = f(i,j) 1+f(i-1,j-1)	if(s1[i-1]==s2[j-1])
 	   else 0
 	   take max on every first update		
 Egg Drop = 1+min(forxfloors max(f(x-1,e-1),f(n-x,e))
 	  f(1,j)=1; f(i,1)=i;
-LIS two loops i-> 1ton and j-> 1toi
-Longest Palindomic Substring : 1) search all possibilities O(N^3) or expand from all in two dir O(n^2)
+##TODO##
+LIS 	: two loops i-> 1ton and j-> 1toi O(n^2)
+	: Optimised O(nlogn) two arrays increasing and parent;
+	 	2 options for curr element 1) if greater than all the elements in increasing array append at last
+					   2) not greater than all find the place using binary search to replace the element at that position and 						  update parent
+Longest Palindomic Subsequence 1) reverse one string and find longest common subsequence
 			       2) DP   if(i==j)  return 1;
 				       if(s[i]==s[j])  return 2+solve(i+1,j-1);
 				       return max(solve(i+1,j),solve(i,j-1)); 
-			       3) Manachars Algo
+				3) Revesing and finding the longest common substring does not work in all cases eg abacdfgdcaba gives abcad as answer
+				It can be corrected by checking if reversed strings original indices are same as that of strings when a match is found 					if yes then update else ignore
+Longest Palindromic Substring :	
+			Brute Force: search all possibilities O(N^3) or expand from all in two dir O(n^2)
+			DP	1) First fill all the diagonal as true one elements are paldromes 
+				2) Fill consective same places same as palindrome second layer of he daiagonal on top
+				3) begin search of 3 distance if matched check if two distance matached then consider and updated max and palind_begin
+						  B A N A N A 
+						B T F F F F F   
+						A   T F T F T   
+						N     T F T F
+						A       T F T
+						N         T F
+						A	    T
+			MANACHERS:	  1)Create A new string of format $#a#b#a#b....@
+						($ ->Start @ -> End #-> to find even length palindroms)
+					   ALGO 3 Steps: loop i 1 to n-1 of newstring
+						1) When the ith character lies in the Right Boundary of some prev 							palindrome Update its minimum Length to that of its mirror
+						2) Try and expand from the curr palindrome length LPS[i]
+						3) Update the Center and Right Boundary if it expands across the right boundary	
 LCA 
 0/1 knapsack == (i,w) -- (i+1,w+wi) right to left
 		      -- (i+1,w)
 0/Inf knapsack == (i,w) -- (i,w+wi) left to right
 			-- (i+1,w)
 
-Maximum rectangle dp[i][j]=min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1])
+Maximum rectangle dp[i][j]=min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1])+1
 
 PHI and PILLAI
 ---------------
@@ -216,6 +256,7 @@ Uses --> root and find distance from node to node and also store min on path and
 
 III
 -------
+Convert a general tree into binary tree : first find all the first nodes of a given node and consider the edges between them as the permant left edge and considering these nodes link them to all the other siblings in same level to the right and take these edges as permanant right edges.	
 Tree Traversal trickery --> update and query values
 MAX SUM PATH -> 4 cases 1) root NULL 0
 			2) leaf root->data
@@ -269,6 +310,7 @@ Modified kadane for all -ve
 	  resmx = max(resmx, curmx);
 	return resmx
 2) Maximum 2D subarr inlcusion and exclusion priciple a[x][y]-a[i-1][y]-a[x][j-1]+a[i-1][j-1]
+3)Matching Pair Algorithm : Gale Shapely Algo starts with man proposing to the highest ranked women and when women get higher rank propose from man 				    she dumps the existing one and shifts this goes on rank wise until all men are engaged
 
 SUBARR OR SUBSTRING -->  N^2
 SUBSEQUENCE --> 2^N -1 (excluding empty )

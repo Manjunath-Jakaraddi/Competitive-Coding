@@ -19,19 +19,25 @@ inline void prep()
 	cin.tie(0);
 	cin.sync_with_stdio(0);
 }
-string s;
-int solve(int i,int j)
-{
-  if(j<i) return 0;
-  if(i==j)  return 1;
-  if(s[i]==s[j])  return 2+solve(i+1,j-1);
-  return max(solve(i+1,j),solve(i,j-1));
-}
+int na,nb,nc;
+int a[100],b[100],c[100];
 int main()
 {
 	prep();
-  cin>>s;
-  int n=s.length();
-  cout<<solve(0,n-1)<<"\n";
-  return 0;
+  cin>>na>>nb>>nc;
+  loop(i,na)  cin>>a[i];
+  loop(i,nb)  cin>>b[i];
+  loop(i,nc)  cin>>c[i];
+  int mn_range=INT_MAX;
+  int i=0,j=0,k=0;
+  while(i<na&&j<nb&&k<nc)
+  {
+    int f=a[i],s=b[j],t=c[k];
+    mn_range=min(mn_range,max(f,max(s,t))-min(f,min(s,t)));
+    if(f<=s&&f<=t)  i++;
+    else if(s<t&&s<f)  j++;
+    else if(t<f&&t<s) k++;
+  }
+  cout<<mn_range<<"\n";
+	return 0;
 }

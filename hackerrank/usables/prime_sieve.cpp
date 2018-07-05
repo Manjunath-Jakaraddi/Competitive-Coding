@@ -145,6 +145,7 @@ int main()
   sieve_EuelerPhi(10000000);
   sieve_Pillai(10000000);
   sieve_numDiff(10000000);
+	loop(i,26)	cout<<primes[i]<<"\n";
   pf("Last Prime : %d\n",primes[(int)primes.size()-1]);
   pf("Is Prime : %d\n",isPrime(142391208960LL));
   vi r1=primeFactors(142391208960LL);
