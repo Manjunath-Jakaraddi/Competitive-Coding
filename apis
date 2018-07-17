@@ -19,6 +19,26 @@ Counting Sort  : O(n+k) time and space k is num of digits or characters adv sort
 Bucket sort    : floating point created linkedlist and then sort them
 shell sort     : O(n^2)	choose gap=n/2 initially then go on comparing and swaping then reduce gap/=2; until zero
 Radix sort     : O(d*(n+b)) d->digits and b-> base of number uses counting sort as subrotine and can sort only numbers
+Quick sort     : optimised way to find kth element and also median of the large number of intgers
+
+Linked List
+----------
+To create a doubly linkes list using singly linked list use xor concept store the xor address of the previous node and next node in next node when needed to go back just xor the current address with the stored xor value.
+Palindrome Longest in Linked List reverse on curr and compare it. next for 2 cases even and odd even starting (curr,next) and odd from (prev,next)+1.
+Flattening : 
+Node *merge(Node *a,Node *b)
+    if(!a)  return b;
+    if(!b)  return a;
+    if(a->data<b->data)
+        res=a;
+        res->bottom=merge(a->bottom,b);
+    else
+        res=b;
+        res->bottom=merge(a,b->bottom);
+    return res;
+Node *flatten(Node *root)
+   if(!root||!root->next)  return root;
+   return merge(root,flatten(root->next));
 
 SEARCHING
 ----------
@@ -28,12 +48,86 @@ lower_bound : 1) if only one occurence return ele idx;
 	      2) if multiple occurence return first occurence of ele idx.
 	      3) if none occurence return next highest.
 Upper_bound : 1) if only one occurence retrun next highest ele idx;
-	      2) if multiple occurence return highest occurence of ele idx.
+	      2) if multiple occurence return next highest occurence of ele idx.
 	      3) if none occurence return next highest ele idx.
 JUMP : sorted sqrt(n)
 INTERPOLATION Search : Uniform data better than binary search
 		       If elements are uniformly distributed, then O (log log n)). In worst case it can take upto O(n).
 		       pos=lo+[(x-arr[lo])/(arr[hi]-arr[Lo])]*(hi-lo)		x     ==> Element to be searched
+Finding the leftmost and Rightmost element :
+	int i=0,j=nums.size()-1;
+        while(i<j)
+        {
+            // finding the left most element
+            int mid=(i+j)>>1;
+            if(nums[mid]<target)    i=mid+1;    // Normal Left Update //Condition s.t from left first occurenct just satisfy condition nums[mid]<target
+            else    j=mid;					      // and pick the element 2nd of it	
+        }
+        // Element present at i
+        if(arr[i]!=target)  return res;
+        else    res[0]=i;
+
+        i=0,j=nums.size()-1;
+        //Finding right most element
+        while(i<j)
+        {
+            // modified mid
+            int mid=((i+j)>>1)+1;
+            if(nums[mid]>target)  j=mid-1; // Normal Right Update
+            else    i=mid;
+        }
+        // Element present at j
+        res[1]=j;
+        return res;
+Interval Mergeing : 
+	sort(intervals.begin(),intervals.end(),[](Interval a,Interval b) { if(a.start!=b.start)   return a.start<b.start; return a.end<b.end; });
+        int start=intervals[0].start,end=intervals[0].end,i=1;
+        while(i<intervals.size())
+        {
+            if(intervals[i].start<=end)
+            {
+                end=max(end,intervals[i].end);
+                i++;
+            }
+            else
+            {
+                res.push_back(Interval(start,end));
+                start=intervals[i].start;
+                end=intervals[i].end;
+            }
+        }
+        res.push_back(Interval(start,end));
+Rotated Search :         int i=0,j=nums.size()-1;
+        while(i<j)
+        {
+            int mid=(i+j)>>1;
+            if(nums[mid]>nums[j]) i=mid+1;
+            else    j=mid;
+        }
+        int p=i;
+        // cout<<p<<" ";
+        i=0;j=nums.size()-1;
+        while(i<=j)
+        {
+            int mid=((i+j)>>1);
+            int modi_mid=(mid+p)%nums.size();
+            if(nums[modi_mid]==target)   return modi_mid;
+            else if(nums[modi_mid]<target)   i=mid+1;
+            else    j=mid-1;
+        }
+Boyer Moore Majority Vote Algorithm : 
+------------------------------------
+Finding element which is repeated more than half in array : If an element is repeating more than half then there should exist two elemenst of the majority adjacent to each other.
+	for(auto it:nums)
+	    if(cnt==0)
+		ele=it;
+		cnt++;
+	    else
+		if(it==ele) cnt++;
+		else    cnt--;
+	cnt=0;
+	for(auto it:nums)   if(it==ele) cnt++;
+if(cnt>=nums.size()/2)  return ele;
 HEAP
 ---------
 maxheap ==> less<int>()
@@ -65,15 +159,29 @@ bt.test(i)
 acess bt[i][j]
 bt.any() any bit set
 bt.none() none bit set
+next(iterator)
 
+vi arr= 1 2 3 3 4 5 5 ==> 1 2 3 4 5
+arr.erase(unique(all(arr)),arr.end())
 
 Priority Queue
 --------------
-Max priority queue ==> priority_queue<ii,vii,greater<ii> > pq;
+Min priority queue ==> priority_queue<ii,vii,greater<ii> > pq;
 Min priority queue ==> multiset <ii > pq;  
 
 DP
 --------
+Max subarr product : 
+int imax=arr[0],imin=arr[0];
+        int res=arr[0];
+        for(int i=1;i<arr.size();i++)
+            if(arr[i]<0)    swap(imax,imin);
+            imax=max(arr[i],imax*arr[i]);
+            imin=min(arr[i],imin*arr[i]);
+            res=max(res,imax);
+
+Number of unique path from 1,1 to (m,n) formula : consider m-1 horizontal paths and n-1 vertical paths cominations of these paths is 
+((n-1)+(m-1))/(n-1)!(m-1)!
 Inclusion Exclusion Type : 0 -> inclusion and 1-> exclusion
 			   inclusive[i]=arr[i]+exclusive[i-1]  			==> dp[i][0]=arr[i]+dp[i-1][1]
 			   exclusive[i]=max(inclusive[i-1],exclusive[i-1])	==> dp[i][1]=max(dp[i-1][0],dp[i-1][1])
@@ -94,11 +202,18 @@ LCSubstr = f(i,j) 1+f(i-1,j-1)	if(s1[i-1]==s2[j-1])
 	   take max on every first update		
 Egg Drop = 1+min(forxfloors max(f(x-1,e-1),f(n-x,e))
 	  f(1,j)=1; f(i,1)=i;
-##TODO##
+
 LIS 	: two loops i-> 1ton and j-> 1toi O(n^2)
 	: Optimised O(nlogn) two arrays increasing and parent;
 	 	2 options for curr element 1) if greater than all the elements in increasing array append at last
 					   2) not greater than all find the place using binary search to replace the element at that position and 						  update parent
+		vi res;
+		for(int i=0;i<nums.size();i++)
+		    auto it=lower_bound(all(res),nums[i]);
+		    if(it==res.end())   res.pb(nums[i]);
+		    else    *it=nums[i];
+		return res.size();
+
 Longest Palindomic Subsequence 1) reverse one string and find longest common subsequence
 			       2) DP   if(i==j)  return 1;
 				       if(s[i]==s[j])  return 2+solve(i+1,j-1);
@@ -252,7 +367,12 @@ II
 LCA(Least Common ANcestor Binary Uplifting ) table[k][i] k->2^kth jump i -> node 
 table[i] can be computed using values from table[i-1] 
 Uses --> root and find distance from node to node and also store min on path and jmp in powers of k and find min on path
-
+ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(!root||root==p||root==q) return root;
+        TreeNode *left=lowestCommonAncestor(root->left,p,q);
+        TreeNode *right=lowestCommonAncestor(root->right,p,q);
+        return !left?right:!right?left:root;
+    }
 
 III
 -------
@@ -272,6 +392,22 @@ Check If given is BST ;
 Check If tree is symmetric or mirror
         if(p==NULL||q==NULL)    return p==q;
         return (p->val==q->val&&check(p->left,q->right)&&check(p->right,q->left));
+Construct Tree given Inorder and Preorder : 
+    TreeNode* buildTree(vector<int>& preorder,vector<int>& inorder,int prel,int prer,int inl,int inr)
+    {
+        if(prel>prer)   return NULL;
+        TreeNode *root=new TreeNode(preorder[prel]);
+        int pos;
+        for(pos=inl;pos<=inr;pos++) if(preorder[prel]==inorder[pos])    break;
+        root->left=buildTree(preorder,inorder,prel+1,prel+pos-inl,inl,pos-1);
+        root->right=buildTree(preorder,inorder,prel+pos-inl+1,prer,pos+1,inr);
+        return root;
+    }
+Print all brackets possibilities : given n such as ((())) (())() so on
+void solve(string str,int n,int m)
+	if(n==0&&m==0)
+        if(n>0) solve(str+"(",n-1,m+1);
+        if(m>0) solve(str+")",n,m-1);
 Construct bbinary tree with 1) inoder and preorder
 			    2) inorder and postorder
 			    3) preorder and postorder(possible if only the tree is full binary tree)
@@ -283,7 +419,10 @@ INFO : The maximum number of nodes at level ‘l’ of a binary tree is 2^(l-1).
        Complete binary tree eg HEAP
        Perfect Binary TRee all have 2 childrens and leaves at same level
        Balanced Binary Trees R-B trees difference between heights of left and right subtrees is 1
-
+UFDS 
+-------------
+Rank use to restrict the depth of the binary tree if used complexity logn else n
+Path Compression to further reduce the complexity amortized to O(1).
 MODULAR
 ---------
 ANY NUMBER CAN BECOME VALID WHEN MODDED TOO
@@ -291,6 +430,12 @@ i.e Number of large ranges computer within the mods even divisibility test satis
 
 BIT MANIP
 ---------
+Recursive add : 
+int Add(int x, int y)
+    if (y == 0)
+        return x;
+    else
+        return Add( x ^ y, (x & y) << 1);
 __builtin_popcount() --> number of set bits
 divisibility by 3 --> number of oddbits set - number of even bits set should be divisible by 3 again recursion!!.
 
@@ -362,7 +507,7 @@ CYCLE FINDING : hare and tortoise x(i)=x(i+kλ)
 	Finding μ: reset hare to start and tortoise at same and move both iteratively as difference b/w then is kλ first occurence of both equal stop 			   and the point where the hare point is the value of μ.
 	Finding λ: now tortoise at same place and move hare to next of tortoise and move hare iteratively to right one step when same value as 			   tortoise then the difference b/w them is value of λ.
 Extended Euclidean:  Equation ax+by=c d=gcd(a,b)
-		     # 3 Cases 1) if d do divide c no solution
+		     # 3 Cases 1) if d do not divide c no solution
 			       2) if d==c unique solution(x0,y0) i.e ax+by=gcd(a,b)
 			       3) if d divide c infinite solution x = x0+(b/d)n and y=y0-(a/d)n
 				extendedEuclid(int a,int b)

@@ -19,6 +19,7 @@ inline void prep()
 	cin.tie(0);
 	cin.sync_with_stdio(0);
 }
+int cnt=0;
 #define EXPLORED 2
 #define VISITED 1
 #define UNVISITED 0
@@ -42,7 +43,10 @@ void dfs(int s)
       if(it==dfs_par[s])  //Two Way Edge 2 - 3 - 2 undirected graph
         cout<<"Two ways "<<s<<" "<<it<<"-"<<it<<" "<<s<<"\n";
       else //Back Edge forming cycle
-        cout<<"Back Edge "<<s<<" "<<it<<"\n";
+      {
+				cnt++;
+				cout<<"Back Edge "<<s<<" "<<it<<"\n";
+			}
     }
     else if(dfs_num[it]==VISITED) // EXPLORED -> VISITED
       cout<<"Cross Edge "<<s<<" "<<it<<"\n";
@@ -59,12 +63,13 @@ int main()
     cin>>x>>y;
     // x--;y--;
     edges[x].pb(y);
-    edges[y].pb(x);
+    // edges[y].pb(x);
   }
   loop(i,n) if(dfs_num[i]==UNVISITED)
   {
     cout<<"Component "<<++numcomp<<":\n";
     dfs(i);
   }
+	cout<<cnt<<"\n";
 	return 0;
 }

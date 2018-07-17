@@ -95,7 +95,7 @@ int main()
 	prep();
 	cin>>s1;
 	n=s1.length();
-	bup();
+	// bup();
 	Manachars();
 	return 0;
 }

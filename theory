@@ -1,0 +1,195 @@
+What is Object Oriented Programming?
+Object Oriented Programming (OOP) is a programming paradigm where the complete software operates as a bunch of objects talking to each other. An object is a collection of data and methods that operate on its data.
+
+Why OOP?
+1) The overall understanding of the software is increased as the distance between the language spoken by developers and that spoken by users.
+2) Object orientation eases maintenance by the use of encapsulation.   One can easily change the underlying representation by keeping the methods same.
+
+What are main features of OOP?
+Encapsulation
+Polymorphism
+Inheritance
+
+OOP
+--------
+A deep copy copies all fields, and makes copies of dynamically allocated memory pointed to by the fields. A deep copy occurs when an object is copied along with the objects to which it refers. 
+Shallow copy is a bit-wise copy of an object.
+Lazy copy is optimised implementation of deep copy by first making shallow copy if there is any modification then form deep copy it is so coz shallow copy is faster.
+
+Objects memory only the variables.Functions binded to object using this pointer.
+Data Encapsulation : Wrapping up(combing) of data and functions into a single unit is known as encapsulation.This insulation of the data from direct access by the program is called data hiding or information hiding.
+Data abstraction : providing only needed information to the outside world and hiding implementation details.
+Inheritance: inheritance is the process by which objects of one class acquire the properties of objects of another class.
+Polymorphism: polymorphism means ability to take more than one form.An operation may exhibit different behaviors in different instances. The behavior depends upon the types of data used in the operation.
+Operator overloading is the process of making an operator to exhibit different behaviors in different instances is known as operator overloading.
+Function overloading is using a single function name to perform different types of tasks.
+Polymorphism is extensively used in implementing inheritance.
+Dynamic Binding: In dynamic binding, the code to be executed in response to function call is decided at runtime. C++ has virtual functions to support this.
+Declaring Objects: When a class is defined, only the specification for the object is defined; no memory or storage is allocated.
+Access Specifiers : Accessing a data member depends solely on the access control of that data member.
+Note that all the member functions defined inside the class definition are by default inline
+Construcctors : There are 3 types of constructors: (No return Type)	
+		1)Default constructors
+    		2)Parametrized constructors
+    		3)Copy constructors : A Copy Constructor creates a new object, which is exact copy of the existing copy. The compiler provides a 						default Copy Constructor to all the classes.
+					Don't write a copy constructor if shallow copies are ok(i.e no ptrs to dynamically allocated memroy strings)
+Destructor is another special member function that is called by the compiler when the scope of the object ends.there can only one destructor in a class with classname preceded by ~, no parameters and no return type.When a class contains a pointer to memory allocated in class, we should write a destructor to release memory before the class instance is destroyed. This must be done to avoid memory leak.
+Friend Class A friend class can access private and protected members of other class in which it is declared as friend.Friend Class A friend class can access private and protected members of other class in which it is declared as friend
+
+PolyMorphism
+--------------
+1) Compile Time Polymorphism
+-------------------------------
+Compile time polymorphism: This type of polymorphism is achieved by function overloading or operator overloading.
+i)Function Overloading: When there are multiple functions with same name but different parameters then these functions are said to be overloaded.  				Functions can be overloaded by change in number of arguments or/and change in type of arguments.
+ii)Operator Overloading: C++ also provide option to overload operators.	eg)Complex operator + (Complex const &obj)
+2)Virtual (run-time polymorphism)
+-------------------------------
+Runtime polymorphism: This type of polymorphism is achieved by Function Overriding. 
+i)Function overriding on the other hand occurs when a derived class has a definition for one of the member functions of the base class. That base 				function is said to be overridden.
+Destructor Virtual : https://www.geeksforgeeks.org/virtual-destructor/
+Pure Virtual Desctuctors : https://www.geeksforgeeks.org/pure-virtual-destructor-c/
+If a class contains pure virtual functions or destructor object of such ac class cannot be created.
+if a base class destructor is pure virtual then a desctuctor function definition has to be written outside the class.
+Pure Virtual Functions (Abstract Functions ) : Sometimes implementation of all function cannot be provided in a base class because we don’t know the 							implementation. Such a class is called abstract class. For example, let Shape be a base class. We 							cannot provide implementation of function draw() in Shape, but we know every derived class must have 							implementation of draw().A class is abstract if it has at least one pure virtual function.If we do not 							override the pure virtual function in derived class, then derived class also becomes abstract class.
+Java Interface vs Abstract Classes:
+An interface does not have implementation of any of its methods, it can be considered as a collection of method declarations. In C++, an interface can be simulated by making all methods as pure virtual. In Java, there is a separate keyword for interface. 
+In C++, once a member function is declared as a virtual function in a base class, it becomes virtual in every class derived from that base class.
+class Base
+{
+public:
+	virtual void show() { cout<<" In Base \n"; }
+};
+
+class Derived: public Base
+{
+public:
+	void show() { cout<<"In Derived \n"; }
+};
+
+int main(void)
+	Base *bp = new Derived;
+	bp->show(); // RUN-TIME POLYMORPHISM
+	return 0;
+if we remove the virtual keyword in base class then o/p will be In base else In derived what happens if virtual ptr table the address of the function gets replaced if we mention it as virtual else it does not hence no overiding
+
+ For example, consider a employee management software for an organization, let the code has a simple base class Employee , the class contains virtual functions like raiseSalary(), transfer(), promote(),.. etc. Different types of employees like Manager, Engineer, ..etc may have their own implementations of the virtual functions present in base class Employee. In our complete software, we just need to pass a list of employees everywhere and call appropriate functions without even knowing the type of employee. For example, we can easily raise salary of all employees by iterating through list of employees. Every type of employee may have its own logic in its class, we don’t need to worry because if raiseSalary() is present for a specific employee type, only that function would be called.
+
+class Employee
+{
+public:
+    virtual void raiseSalary()
+    {  /* common raise salary code */  }
+ 
+    virtual void promote()
+    { /* common promote code */ }
+};
+ 
+class Manager: public Employee {
+    virtual void raiseSalary()
+    {  /* Manager specific raise salary code, may contain
+          increment of manager specific incentives*/  }
+ 
+    virtual void promote()
+    { /* Manager specific promote */ }
+};
+ 
+// Similarly, there may be other types of employees
+ 
+// We need a very simple function to increment salary of all employees
+// Note that emp[] is an array of pointers and actual pointed objects can
+// be any type of employees. This function should ideally be in a class 
+// like Organization, we have made it global to keep things simple
+void globalRaiseSalary(Employee *emp[], int n)
+    for (int i = 0; i < n; i++)
+        emp[i]->raiseSalary(); // Polymorphic Call: Calls raiseSalary() 
+                               // according to the actual object, not 
+                               // according to the type of pointer  
+How the Magic Happens: (Virtual are so helpful that java keeps all functions as virtual by default)
+----------------------
+vtable: A table of function pointers. It is maintained per class.
+vptr: A pointer to vtable. It is maintained per object.
+
+Inheritance
+------------
+The capability of a class to derive properties and characteristics from another class is called Inheritance.                                
+1) Why and when to use inheritance: 
+2)Modes of Inheritance
+class subclass_name : access_mode base_class_name
+{
+  //body of subclass
+};
+    Public mode: If we derive a sub class from a public base class. Then the public member of the base class will become public in the derived class and protected members of the base class will become protected in derived class.
+    Protected mode: If we derive a sub class from a Protected base class. Then both public member and protected members of the base class will become protected in derived class.
+    Private mode: If we derive a sub class from a Private base class. Then both public member and protected members of the base class will become Private in derived class.
+class A 
+{
+public:
+    int x;
+protected:
+    int y;
+private:
+    int z;
+};
+ 
+class B : public A
+{
+    // x is public
+    // y is protected
+    // z is not accessible from B
+};
+ 
+class C : protected A
+{
+    // x is protected
+    // y is protected
+    // z is not accessible from C
+};
+ 
+class D : private A    // 'private' is default for classes
+{
+    // x is private
+    // y is private
+    // z is not accessible from D
+};
+3)Types of Inheritance : 
+1)Single Inheritance: In single inheritance, a class is allowed to inherit from only one class. i.e. one sub class is inherited by one base class only.
+2)Multiple Inheritance: Multiple Inheritance is a feature of C++ where a class can inherit from more than one classes. i.e one sub class is inherited from more than one base classes.eg)class Car: public Vehicle, public FourWheeler
+3)Multilevel Inheritance: In this type of inheritance, a derived class is created from another derived class. 
+4)Hierarchical Inheritance: In this type of inheritance, more than one sub class is inherited from a single base class. i.e. more than one derived class is created from a single base class
+5)Hybrid (Virtual) Inheritance: Hybrid Inheritance is implemented by combining more than one type of inheritance. For example: Combining Hierarchical inheritance and Multiple Inheritance.
+
+Consider a real life example: What happens when a driver applies brakes? The car stops. The driver only knows that to stop the car, he needs to apply the brakes. He is unaware of how actually the car stops. That is how the engine stops working or the internal implementation on the engine side. This is what data hiding is.
+
+Static : (https://www.geeksforgeeks.org/static-keyword-cpp/)
+----------
+Static keyword has different meanings when used with different types. We can use static keyword with:
+Static Variables : Variables in a function, Variables in a class ==> When a variable is declared as static, space for it gets allocated for the 			lifetime of the program. Even if the function is called multiple times, space for the static variable is allocated only once 				and the value of variable in the previous call gets carried through the next function call. 
+Static Members of Class : Class objects and Functions in a class==> As the variables declared as static are initialized only once as they are 				allocated space in separate static storage so, the static variables in a class are shared by the objects. There can not be 				multiple copies of same static variables for different objects. Also because of this reason static variables can not be	 				initialized using constructors. Initialisie eg) int Geeks::i=0 for class Geeks and inside class static int i; for functions 				GfG::printMsg(); which are declared as staic void printMsg()
+Test t;             // Stack based object
+static Test t1;     // Static object 
+. Stack based objects are also called automatic objects or local objects. static object are initialized only once and live until the program terminates.static objects are allocated storage in static storage area. static object is destroyed at the termination of program
+
+We can do delete this if object is assigned using the new keyword else not.	
+
+What are VTABLE and VPTR?
+vtable is a table of function pointers. It is maintained per class.
+vptr is a pointer to vtable. It is maintained per object (See this for an example).
+Compiler adds additional code at two places to maintain and use vtable and vptr.
+1) Code in every constructor. This code sets vptr of the object being created. This code sets vptr to point to vtable of the class.
+2) Code with polymorphic function call (e.g. bp->show() in above code). Wherever a polymorphic call is made, compiler inserts code to first look for vptr using base class pointer or reference (In the above example, since pointed or referred object is of derived type, vptr of derived class is accessed). Once vptr is fetched, vtable of derived class can be accessed. Using vtable, address of derived derived class function show() is accessed and called
+
+
+
+Templates in C++ (https://www.geeksforgeeks.org/templates-cpp/)
+Template is simple and yet very powerful tool in C++. The simple idea is to pass data type as a parameter so that we don’t need to write same code for different data types.Templates are expended at compiler time. This is like macros.
+eg)template <typename T>
+T myMax(T x, T y)		Call : myMax<int>(3, 7) 
+   return (x > y)? x: y;
+
+References vs Pointers
+-----------------------
+1) Once a reference is created, it cannot be later made to reference another object
+2) References cannot be NULL. 
+3) A reference must be initialized when declared.
+Adv of references : Safer and Easier

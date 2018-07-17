@@ -19,30 +19,39 @@ inline void prep()
 	cin.tie(0);
 	cin.sync_with_stdio(0);
 }
-string s;
-int cnt_same[1000006],n;
-int solve()
+vi arr;
+int n;
+int maxsubsetxor()
 {
-  int cnt=0,i=0,j=0,ans=0;
-  while(i<n)
+  int ind=0;
+  for(int i=31;i>=0;i--)
   {
-    j=i+1,cnt=1;
-    while(j<n&&s[i]==s[j])  ++j,cnt++;
-    ans+=(cnt*(cnt+1))>>1;
-    cnt_same[i]=cnt;
-    i=j;
+    int maxEle=INT_MIN,mxind=0;
+    for(int j=ind;j<n;j++)
+    {
+      if((1<<i)&arr[j])
+      {
+        maxEle=arr[j];
+        mxind=j;
+      }
+    }
+    if(maxEle==INT_MIN) continue;
+    swap(arr[mxind],arr[ind]);
+    mxind=ind;
+    for(int j=0;j<n;j++)
+      if(((1<<i)&arr[j])&&j!=mxind) arr[j]^=maxEle;
+    ind++;
   }
-  for(int i=1;i<n-1;i++)
-  {
-    if(s[i]==s[i-1])  cnt_same[i]=cnt_same[i-1];
-    if(s[i]!=s[i+1]&&s[i-1]==s[i+1])  ans+=min(cnt_same[i-1],cnt_same[i+1]);
-  }
-  return ans;
+  int res=0;
+  loop(i,n) res^=arr[i];
+  return res;
 }
 int main()
 {
 	prep();
-	cin>>n>>s;
-	cout<<solve()<<"\n";
+  cin>>n;
+  arr.assign(n,0);
+  loop(i,n)  cin>>arr[i];
+  cout<<maxsubsetxor()<<"\n";
 	return 0;
 }

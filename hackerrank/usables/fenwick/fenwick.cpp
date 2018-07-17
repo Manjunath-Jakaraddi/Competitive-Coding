@@ -34,7 +34,7 @@ class fenwick
       return sum(j)-sum(i-1);
     }
 };
-
+// 1 Indexed Use only
 int main()
 {
   fenwick f1(5);
