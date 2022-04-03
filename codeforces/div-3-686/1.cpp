@@ -11,26 +11,24 @@ typedef vector<int> vi;
 #define all(v) v.begin(), v.end()
 #define rep(i, s, e) for(auto i=s; i<=e; i++)
 #define loop(i, n) for(int i=0; i<n; i++)
-#define mp make_pair
+#define oo 987654321
+int dx[8]={-1,1,0,0,-1,-1,1,1};
+int dy[8]={0,0,-1,1,-1,1,-1,1};
 inline void prep()
 {
 	cin.tie(0);
 	cin.sync_with_stdio(0);
 }
-int fib[100005];
 int main()
 {
 	prep();
-  fib[0]=1;
-  fib[1]=2;
-  int i=1;
-  ll ans=0;
-  while(fib[i]<=4000000)
-  {
-    fib[i+1]=fib[i-1]+fib[i];
-    if(fib[i]%2==0) ans+=fib[i];
-    i++;
+  int t;
+  cin>>t;
+  while(t--) {
+    int n;
+    cin>>n;
+    for(int i=2;i<=n;i++) cout<<i<<" ";
+    cout<<"1"<<"\n";
   }
-  cout<<ans<<"\n";
 	return 0;
 }
