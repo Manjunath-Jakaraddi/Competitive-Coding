@@ -1,0 +1,24 @@
+
+T	java:S106s"9Replace this use of System.out or System.err by a logger.(°•Ş8ÜñÑô.
+L
+java:S11721"*Remove this unused method parameter "out".(Ü¹®¾üÿÿÿÿ8‘ÙÊÑô.
+H
+java:S1659\"&Declare "nextCoin" on a separate line.(ÀÕ¯Ôşÿÿÿÿ8ÜñÑô.
+Z	java:S106O"9Replace this use of System.out or System.err by a logger.(¡ò†şÿÿÿÿ8‘ÙÊÑô.
+K
+java:S1444")Make this "public static out" field final(’óÈøÿÿÿÿ8‘ÙÊÑô.
+Z	java:S106T"9Replace this use of System.out or System.err by a logger.(ÃµÀ¤şÿÿÿÿ8ÌŠÒô.
+Z	java:S106X"9Replace this use of System.out or System.err by a logger.(ÃµÀ¤şÿÿÿÿ8É™ŠÒô.
+U	java:S106k"9Replace this use of System.out or System.err by a logger.(ıÒûö8ÜñÑô.
+C
+java:S1659"!Declare "dst" on a separate line.(ñÍ˜¼úÿÿÿÿ8‘ÙÊÑô.
+Z	java:S106"9Replace this use of System.out or System.err by a logger.(Ÿ‡şÿÿÿÿ8‘ÙÊÑô.
+t
+java:S37761"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(Ü¹®¾üÿÿÿÿ8‘ÙÊÑô.
+U	java:S106q"9Replace this use of System.out or System.err by a logger.(Ê±ƒ˜8ÜñÑô.
+q
+java:S1104"OMake out a static final constant or non-public and provide accessors if needed.(’óÈøÿÿÿÿ8‘ÙÊÑô.
+A
+java:S1659"Declare "n" on a separate line.(ˆ’©ïıÿÿÿÿ8‘ÙÊÑô.
+H
+java:S1659"&Declare "numCoins" on a separate line.(ˆ’©ïıÿÿÿÿ8‘ÙÊÑô.

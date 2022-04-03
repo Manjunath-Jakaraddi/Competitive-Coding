@@ -1,0 +1,13 @@
+
+q
+java:S1104"OMake out a static final constant or non-public and provide accessors if needed.(’óÈøÿÿÿÿ8æ±áÖ×.
+Z	java:S106"9Replace this use of System.out or System.err by a logger.(Ÿ‡şÿÿÿÿ8æ±áÖ×.
+I
+java:S1905c"'Remove this unnecessary cast to "long".(«ÙºÀÿÿÿÿÿ8öÔ²ÛÛ.
+[
+java:S1155F">Use isEmpty() to check whether the collection is empty or not.(¬È“Ø8ñ³Ğ××.
+t
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 38 to the 15 allowed.(Ü¹®¾üÿÿÿÿ8æ±áÖ×.
+z	java:S135h"YReduce the total number of break and continue statements in this loop to use at most one.(ö‹¯¯ıÿÿÿÿ8ñ³Ğ××.
+K
+java:S1444")Make this "public static out" field final(’óÈøÿÿÿÿ8æ±áÖ×.

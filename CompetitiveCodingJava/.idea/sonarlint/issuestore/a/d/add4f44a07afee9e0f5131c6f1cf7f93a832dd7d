@@ -1,0 +1,19 @@
+
+D
+java:S1444
+")Make this "public static out" field final(’óÈøÿÿÿÿ
+j
+java:S1104
+"OMake out a static final constant or non-public and provide accessors if needed.(’óÈøÿÿÿÿ
+—
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(šŸ¢Ö
+S	java:S106"9Replace this use of System.out or System.err by a logger.(Ÿ‡şÿÿÿÿ
+E
+java:S1172"*Remove this unused method parameter "out".(îÂüÿÿÿÿ
+N	java:S106("9Replace this use of System.out or System.err by a logger.(½‘‚
+N	java:S106*"9Replace this use of System.out or System.err by a logger.(»œáÏ
+S	java:S106,"9Replace this use of System.out or System.err by a logger.(™·¼ğøÿÿÿÿ
+M	java:S106."9Replace this use of System.out or System.err by a logger.(°•Ş
+G
+java:S11723"*Remove this unused method parameter "out".(÷™¹8‹«æ¶è/
+Z	java:S1069"9Replace this use of System.out or System.err by a logger.(®äÃåüÿÿÿÿ8‹«æ¶è/
