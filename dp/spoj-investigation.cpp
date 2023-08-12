@@ -6,6 +6,7 @@
 #include<set>
 #include<vector>
 #include<queue>
+#include<cstring>
 using namespace std;
 
 void __print(int x) {cerr << x;}
@@ -59,41 +60,63 @@ int gcd(int a, int b) {
    return b ? gcd(b, a % b) : a;
 }
 
-void solve() {
-    int n, sn, l, r, q;
-    cin>>n>>sn;
-    vii segs(sn);
-    loop(i, sn)  {
-        cin>>segs[i].first>>segs[i].second;
-        segs[i].first--;
-    }
-    cin>>q;
-    vi qr(q, 0);
-    loop(i, q)  cin>>qr[i];
-    l=0, r=q+1;
-    while (l<r) {
-        int m = l + ((r-l)>>1);
-        vi pre(n+1, 0);
-        loop(i, m) pre[qr[i]]=1;
-        rep(i, 1, n) pre[i] += pre[i-1];
-        bool found = false;
-        loop(i, sn) {
-            if ((pre[segs[i].second] - pre[segs[i].first]) > ((segs[i].second - segs[i].first)/ 2)) {
-                found = true;
-                break;
+int solve2(string dig, int k) {
+    int n = dig.length();
+    int dp[11][91][91][2];
+    memset(dp, 0, sizeof dp);
+    dp[0][0][0][1] = 1;
+    if (k > 90) return 0;
+    for (int pos=0; pos<n; pos++) {
+        for (int sk=0; sk<9*n; sk++) {
+            for (int kk=0; kk<9*n; kk++) {
+                for (int tight : {1, 0}) {
+                    int curr = dp[pos][sk][kk][tight];
+                    int LMT = (tight ? dig[pos]-'0' : 9);
+                    for (int dd=0; dd<=LMT; dd++) {
+                        int ntight = (tight && dd == LMT);
+                        int nsk = (sk + dd)%k;
+                        int nk = (kk*10 + dd)%k;
+                        int& next = dp[pos+1][nsk][nk][ntight];
+                        next = (next + curr); 
+                    }
+                }
             }
         }
-        if (found) r = m;
-        else l = m + 1;
     }
-    if (l > q) cout<<"-1\n";
-    else cout<<l<<"\n";
+    return (dp[n][0][0][1] + dp[n][0][0][0]);
+}
+int dp[11][91][91][2];
+int dfs(int pos, int sm, int num, int tight, string dig, int k) {
+    if (k > 90) return 0;
+    int n = dig.length();
+    if (pos == n) {
+        return (!sm && !num);
+    }
+    int &curr=dp[pos][sm][num][tight];
+    if (curr != -1) return curr;
+    curr=0;
+    int LMT = (tight ? dig[pos]-'0' : 9);
+    for (int dd=0; dd<=LMT; dd++) {
+        curr += dfs(pos+1, (sm+dd)%k, (num*10+dd)%k, (tight && dd==LMT), dig, k);
+    }
+    return curr;
+}
+int solve1(string dig, int k) {
+    memset(dp, -1, sizeof dp);
+    return dfs(0, 0, 0, 1, dig, k);
+}
+void solve() {
+    int a, b, k;
+    cin>>a>>b>>k;
+    a--;
+    cout<<solve1(to_string(b), k) - solve1(to_string(a), k)<<"\n"; 
 }
 
 void querysolve() {
     int tt;
     cin>>tt;
-    while(tt--) {
+    rep(t, 1, tt) {
+        cout<<"Case " << t<<": ";
         solve();
     }
 }

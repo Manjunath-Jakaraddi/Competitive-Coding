@@ -6,6 +6,7 @@
 #include<set>
 #include<vector>
 #include<queue>
+#include<cstring>
 using namespace std;
 
 void __print(int x) {cerr << x;}
@@ -59,35 +60,44 @@ int gcd(int a, int b) {
    return b ? gcd(b, a % b) : a;
 }
 
-void solve() {
-    int n, sn, l, r, q;
-    cin>>n>>sn;
-    vii segs(sn);
-    loop(i, sn)  {
-        cin>>segs[i].first>>segs[i].second;
-        segs[i].first--;
+int a, b, d, k;
+vi get_num(int n) {
+    vi N;
+    while(n) {
+        N.pb(n%10);
+        n/=10;
     }
-    cin>>q;
-    vi qr(q, 0);
-    loop(i, q)  cin>>qr[i];
-    l=0, r=q+1;
-    while (l<r) {
-        int m = l + ((r-l)>>1);
-        vi pre(n+1, 0);
-        loop(i, m) pre[qr[i]]=1;
-        rep(i, 1, n) pre[i] += pre[i-1];
-        bool found = false;
-        loop(i, sn) {
-            if ((pre[segs[i].second] - pre[segs[i].first]) > ((segs[i].second - segs[i].first)/ 2)) {
-                found = true;
-                break;
+    reverse(all(N));
+    return N;
+}
+void solve() {
+    cin>>a>>b>>d>>k;
+    vi A = get_num(a), B = get_num(b);
+    int dp[12][12][2];
+    memset(dp, 0, sizeof dp);
+    int n = B.size();
+    for (int i=0; i<=B[0]; i++) {
+        dp[0][1][i==B[0]] = 1;
+    }
+    for (int pos=1; pos<n; pos++) {
+        for (int cnt=1; cnt<=k; cnt++) {
+            for (bool tight : {true, false}) {
+                int LMT = (tight ? B[pos] : 9);
+                for (int dd=0; dd<=LMT; dd++) {
+                    if (dd == d) {
+                        dp[pos][cnt][tight] += dp[pos-1][cnt-1][1];
+                        if (!tight) dp[pos][cnt][tight] += (dp[pos-1][cnt-1][0]);
+                    } else {
+                        dp[pos][cnt][tight] += dp[pos-1][cnt][1];
+                        if (!tight && d<LMT) dp[pos][cnt][tight] += dp[pos-1][cnt][0];
+                    }
+                }
+                debug(pos, cnt, tight, dp[pos][cnt][tight]);
             }
         }
-        if (found) r = m;
-        else l = m + 1;
     }
-    if (l > q) cout<<"-1\n";
-    else cout<<l<<"\n";
+    int ans = dp[n-1][k][true] + dp[n-1][k][false];
+    cout<<ans<<"\n";
 }
 
 void querysolve() {
@@ -100,7 +110,7 @@ void querysolve() {
 int main()
 {
     prep();
-    querysolve();
-    // solve();
+    // querysolve();
+    solve();
     return 0;
 }

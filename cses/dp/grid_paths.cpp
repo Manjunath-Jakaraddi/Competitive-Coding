@@ -6,6 +6,7 @@
 #include<set>
 #include<vector>
 #include<queue>
+#include<cstring>
 using namespace std;
 
 void __print(int x) {cerr << x;}
@@ -60,34 +61,24 @@ int gcd(int a, int b) {
 }
 
 void solve() {
-    int n, sn, l, r, q;
-    cin>>n>>sn;
-    vii segs(sn);
-    loop(i, sn)  {
-        cin>>segs[i].first>>segs[i].second;
-        segs[i].first--;
+    int n;
+    cin>>n;
+    string G[n];
+    loop(i, n)  cin>>G[i];
+    vector<vector<ll>> dp(n, vector<ll>(n, 0));
+    dp[0][0] = (G[0][0] == '.');
+    rep(i, 1, n-1) {
+        if (G[0][i] == '.') dp[0][i]=dp[0][i-1];
+        if (G[i][0] == '.') dp[i][0]=dp[i-1][0];
     }
-    cin>>q;
-    vi qr(q, 0);
-    loop(i, q)  cin>>qr[i];
-    l=0, r=q+1;
-    while (l<r) {
-        int m = l + ((r-l)>>1);
-        vi pre(n+1, 0);
-        loop(i, m) pre[qr[i]]=1;
-        rep(i, 1, n) pre[i] += pre[i-1];
-        bool found = false;
-        loop(i, sn) {
-            if ((pre[segs[i].second] - pre[segs[i].first]) > ((segs[i].second - segs[i].first)/ 2)) {
-                found = true;
-                break;
+    rep(i, 1, n-1) {
+        rep(j, 1, n-1) {
+            if (G[i][j] != '*') {
+                dp[i][j]=(dp[i-1][j] + dp[i][j-1])%MOD;
             }
         }
-        if (found) r = m;
-        else l = m + 1;
     }
-    if (l > q) cout<<"-1\n";
-    else cout<<l<<"\n";
+    cout<<dp[n-1][n-1]%MOD<<"\n";
 }
 
 void querysolve() {
@@ -100,7 +91,7 @@ void querysolve() {
 int main()
 {
     prep();
-    querysolve();
-    // solve();
+    // querysolve();
+    solve();
     return 0;
 }

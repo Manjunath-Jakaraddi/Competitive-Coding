@@ -60,34 +60,40 @@ int gcd(int a, int b) {
 }
 
 void solve() {
-    int n, sn, l, r, q;
-    cin>>n>>sn;
-    vii segs(sn);
-    loop(i, sn)  {
-        cin>>segs[i].first>>segs[i].second;
-        segs[i].first--;
+    int n, u;
+    cin>>n>>u;
+    vi a(n);
+    loop(i, n)  cin>>a[i];
+    vector<vector<int>> dp(n, vi(u+1, 0));
+    if (a[0] != 0) {
+        dp[0][a[0]]=1;
+    } else {
+        rep(i, 1, u)    dp[0][i]=1;
     }
-    cin>>q;
-    vi qr(q, 0);
-    loop(i, q)  cin>>qr[i];
-    l=0, r=q+1;
-    while (l<r) {
-        int m = l + ((r-l)>>1);
-        vi pre(n+1, 0);
-        loop(i, m) pre[qr[i]]=1;
-        rep(i, 1, n) pre[i] += pre[i-1];
-        bool found = false;
-        loop(i, sn) {
-            if ((pre[segs[i].second] - pre[segs[i].first]) > ((segs[i].second - segs[i].first)/ 2)) {
-                found = true;
-                break;
+    for (int i=1; i<n; i++) {
+        if (a[i] != 0) {
+            for (int num : {a[i]-1, a[i], a[i]+1}) {
+                if (num < 1 || num > u) continue;
+                dp[i][a[i]] = (dp[i][a[i]] + dp[i-1][num])%MOD; 
+            }
+        } else {
+            for (int c=1; c<=u; c++) {
+                for (int num : {c-1, c, c+1}) {
+                    if (num < 1 || num > u) continue;
+                    dp[i][c] = (dp[i][c] + dp[i-1][num])%MOD; 
+                }
             }
         }
-        if (found) r = m;
-        else l = m + 1;
     }
-    if (l > q) cout<<"-1\n";
-    else cout<<l<<"\n";
+    if (a[n-1] != 0) {
+        cout<<dp[n-1][a[n-1]]<<"\n";
+    } else {
+        int ans=0;
+        for (int i=1; i<=u; i++) {
+            ans = (ans + dp[n-1][i]) % MOD;
+        }
+        cout<<ans<<"\n";
+    }
 }
 
 void querysolve() {
@@ -100,7 +106,7 @@ void querysolve() {
 int main()
 {
     prep();
-    querysolve();
-    // solve();
+    // querysolve();
+    solve();
     return 0;
 }

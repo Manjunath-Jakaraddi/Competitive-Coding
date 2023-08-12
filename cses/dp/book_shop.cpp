@@ -60,34 +60,23 @@ int gcd(int a, int b) {
 }
 
 void solve() {
-    int n, sn, l, r, q;
-    cin>>n>>sn;
-    vii segs(sn);
-    loop(i, sn)  {
-        cin>>segs[i].first>>segs[i].second;
-        segs[i].first--;
-    }
-    cin>>q;
-    vi qr(q, 0);
-    loop(i, q)  cin>>qr[i];
-    l=0, r=q+1;
-    while (l<r) {
-        int m = l + ((r-l)>>1);
-        vi pre(n+1, 0);
-        loop(i, m) pre[qr[i]]=1;
-        rep(i, 1, n) pre[i] += pre[i-1];
-        bool found = false;
-        loop(i, sn) {
-            if ((pre[segs[i].second] - pre[segs[i].first]) > ((segs[i].second - segs[i].first)/ 2)) {
-                found = true;
-                break;
+    int n, x;
+    cin>>n>>x;
+    vi h(n), s(n);
+    loop(i, n)  cin>>h[i];
+    loop(i, n)  cin>>s[i];
+    vi dp(x+1, -1);
+    dp[0]=0;
+    int ans = 0;
+    for (int b=0; b<n; b++) {
+        for (int i=x; i>=0; i--) {
+            if (dp[i] != -1 && i+h[b] <= x) {
+                dp[i+h[b]] = max(dp[i] + s[b], dp[i+h[b]]);
+                ans = max(ans, dp[i+h[b]]);
             }
         }
-        if (found) r = m;
-        else l = m + 1;
     }
-    if (l > q) cout<<"-1\n";
-    else cout<<l<<"\n";
+    cout<<ans<<"\n";
 }
 
 void querysolve() {
@@ -100,7 +89,7 @@ void querysolve() {
 int main()
 {
     prep();
-    querysolve();
-    // solve();
+    // querysolve();
+    solve();
     return 0;
 }

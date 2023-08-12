@@ -6,6 +6,7 @@
 #include<set>
 #include<vector>
 #include<queue>
+#include<cstring>
 using namespace std;
 
 void __print(int x) {cerr << x;}
@@ -58,36 +59,25 @@ inline void prep()
 int gcd(int a, int b) {
    return b ? gcd(b, a % b) : a;
 }
-
+int dp[1000006];
+int dfs(int n) {
+    if (n==0) return 0;
+    if (n<0)  return oo;
+    int x = n;
+    int ans = oo;
+    if (dp[n] != -1)    return dp[n];
+    while(x) {
+        if (x%10) ans = min(ans, dfs(n-x%10));
+        x/=10;
+    }
+    dp[n] = 1+ans;
+    return dp[n];
+}
 void solve() {
-    int n, sn, l, r, q;
-    cin>>n>>sn;
-    vii segs(sn);
-    loop(i, sn)  {
-        cin>>segs[i].first>>segs[i].second;
-        segs[i].first--;
-    }
-    cin>>q;
-    vi qr(q, 0);
-    loop(i, q)  cin>>qr[i];
-    l=0, r=q+1;
-    while (l<r) {
-        int m = l + ((r-l)>>1);
-        vi pre(n+1, 0);
-        loop(i, m) pre[qr[i]]=1;
-        rep(i, 1, n) pre[i] += pre[i-1];
-        bool found = false;
-        loop(i, sn) {
-            if ((pre[segs[i].second] - pre[segs[i].first]) > ((segs[i].second - segs[i].first)/ 2)) {
-                found = true;
-                break;
-            }
-        }
-        if (found) r = m;
-        else l = m + 1;
-    }
-    if (l > q) cout<<"-1\n";
-    else cout<<l<<"\n";
+    int n;
+    cin>>n;
+    memset(dp, -1, sizeof dp);
+    cout<<dfs(n)<<"\n";
 }
 
 void querysolve() {
@@ -100,7 +90,7 @@ void querysolve() {
 int main()
 {
     prep();
-    querysolve();
-    // solve();
+    // querysolve();
+    solve();
     return 0;
 }
